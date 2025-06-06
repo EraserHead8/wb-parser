@@ -12,7 +12,7 @@ import zipfile
 
 app = Flask(__name__)
 CORS(app)
-
+#тестовая строка Макса
 # Папка для сохранения файлов
 UPLOAD_FOLDER = 'parsed_files'
 if not os.path.exists(UPLOAD_FOLDER):
