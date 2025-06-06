@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildberries Parser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #666;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: #ebebeb;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #667eea;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .button.secondary {
+            background: #4CAF50;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .progress {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .progress.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .result-item strong {
+            color: #667eea;
+        }
+
+        .hint {
+            color: #888;
+            font-size: 14px;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Wildberries Parser</h1>
+            <p>Парсинг товаров и анализ позиций</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('parser')">
+                Парсинг товаров продавца
+            </div>
+            <div class="tab" onclick="switchTab('position')">
+                Поиск позиции товара
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Вкладка парсинга товаров -->
+            <div id="parser-tab" class="tab-content active">
+                <div class="input-group">
+                    <label for="seller-url">Ссылка на продавца Wildberries:</label>
+                    <input type="url" id="seller-url" placeholder="https://www.wildberries.ru/seller/12345">
+                    <p class="hint">Примеры: https://www.wildberries.ru/seller/596424 или https://www.wildberries.ru/brands/596424</p>
+                </div>
+
+                <button class="button" onclick="startParsing()">
+                    <span id="parse-button-text">🚀 Начать парсинг</span>
+                    <span class="spinner" style="display: none;"></span>
+                </button>
+
+                <div id="parse-progress" class="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">
+                        Инициализация парсера...
+                    </div>
+                </div>
+
+                <div id="parse-error" class="error"></div>
+
+                <div id="download-section" style="display: none; margin-top: 30px;">
+                    <button class="button secondary" onclick="downloadFile()">
+                        📥 Скачать Excel файл
+                    </button>
+                </div>
+            </div>
+
+            <!-- Вкладка поиска позиции -->
+            <div id="position-tab" class="tab-content">
+                <div class="input-group">
+                    <label for="product-url">Ссылка на товар:</label>
+                    <input type="url" id="product-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
+                </div>
+
+                <div class="input-group">
+                    <label for="keywords">Ключевые слова для поиска:</label>
+                    <textarea id="keywords" placeholder="платье летнее; сарафан женский; платье миди"></textarea>
+                    <p class="hint">Введите до 10 ключевых слов или фраз через точку с запятой</p>
+                </div>
+
+                <button class="button" onclick="checkPositions()">
+                    <span id="position-button-text">🔍 Проверить позиции</span>
+                    <span class="spinner" style="display: none;"></span>
+                </button>
+
+                <div id="position-progress" class="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="position-progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="position-progress-text">
+                        Поиск позиций товара...
+                    </div>
+                </div>
+
+                <div id="position-error" class="error"></div>
+
+                <div id="position-results" class="results">
+                    <h3>Результаты поиска:</h3>
+                    <div id="results-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFile = null;
+        
+        // Определяем базовый URL для API
+        const API_BASE_URL = window.location.origin;
+
+        function switchTab(tab) {
+            // Переключение вкладок
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            
+            if (tab === 'parser') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('parser-tab').classList.add('active');
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('position-tab').classList.add('active');
+            }
+        }
+
+        async function startParsing() {
+            const url = document.getElementById('seller-url').value.trim();
+            if (!url) {
+                showError('parse-error', 'Пожалуйста, введите ссылку на продавца');
+                return;
+            }
+
+            const button = document.querySelector('#parser-tab .button');
+            const buttonText = document.getElementById('parse-button-text');
+            const spinner = button.querySelector('.spinner');
+            const progress = document.getElementById('parse-progress');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            progress.classList.add('active');
+            hideError('parse-error');
+            document.getElementById('download-section').style.display = 'none';
+
+            try {
+                console.log('Отправка запроса на:', url);
+                const response = await fetch(`${API_BASE_URL}/parse`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ seller_url: url })
+                });
+
+                console.log('Статус ответа:', response.status);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Ошибка при парсинге');
+                }
+
+                // Симуляция прогресса
+                let progressValue = 0;
+                const progressInterval = setInterval(() => {
+                    progressValue += Math.random() * 15;
+                    if (progressValue > 90) progressValue = 90;
+                    progressFill.style.width = progressValue + '%';
+                    
+                    const messages = [
+                        'Загрузка страницы продавца...',
+                        'Получение списка товаров...',
+                        'Обработка данных товаров...',
+                        'Сбор дополнительной информации...',
+                        'Формирование Excel файла...'
+                    ];
+                    progressText.textContent = messages[Math.floor(progressValue / 20)] || 'Обработка...';
+                }, 500);
+
+                const data = await response.json();
+                
+                clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+                progressText.textContent = `Успешно! Обработано товаров: ${data.products_count}`;
+                
+                currentFile = data.filename;
+                document.getElementById('download-section').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showError('parse-error', 'Ошибка: ' + error.message);
+            } finally {
+                button.disabled = false;
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        async function checkPositions() {
+            const productUrl = document.getElementById('product-url').value.trim();
+            const keywords = document.getElementById('keywords').value.trim();
+            
+            if (!productUrl || !keywords) {
+                showError('position-error', 'Пожалуйста, заполните все поля');
+                return;
+            }
+
+            const keywordsList = keywords.split(';').map(k => k.trim()).filter(k => k);
+            if (keywordsList.length > 10) {
+                showError('position-error', 'Максимум 10 ключевых слов');
+                return;
+            }
+
+            const button = document.querySelector('#position-tab .button');
+            const buttonText = document.getElementById('position-button-text');
+            const spinner = button.querySelector('.spinner');
+            const progress = document.getElementById('position-progress');
+            const progressFill = document.getElementById('position-progress-fill');
+            const progressText = document.getElementById('position-progress-text');
+            const results = document.getElementById('position-results');
+            
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            progress.classList.add('active');
+            results.classList.remove('active');
+            hideError('position-error');
+
+            try {
+                progressText.textContent = `Проверяем позиции для ${keywordsList.length} запросов...`;
+                progressFill.style.width = '10%';
+                
+                const response = await fetch(`${API_BASE_URL}/check-position`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        product_url: productUrl,
+                        keywords: keywordsList
+                    })
+                });
+
+                progressFill.style.width = '90%';
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Ошибка при проверке позиций');
+                }
+
+                const data = await response.json();
+                progressFill.style.width = '100%';
+                progressText.textContent = 'Готово!';
+                
+                setTimeout(() => {
+                    displayResults(data.results);
+                }, 500);
+                
+            } catch (error) {
+                showError('position-error', 'Ошибка: ' + error.message);
+            } finally {
+                button.disabled = false;
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+                setTimeout(() => {
+                    progress.classList.remove('active');
+                }, 1000);
+            }
+        }
+
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('position-results');
+            const resultsList = document.getElementById('results-list');
+            
+            resultsList.innerHTML = '';
+            
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                
+                let positionText;
+                if (result.position > 0) {
+                    positionText = `Позиция: <strong>${result.position}</strong>`;
+                    if (result.position <= 10) {
+                        positionText += ' 🏆';
+                    } else if (result.position <= 50) {
+                        positionText += ' ✅';
+                    }
+                } else {
+                    positionText = 'Товар не найден в топ-1000';
+                }
+                
+                item.innerHTML = `
+                    <strong>${result.keyword}</strong> - ${positionText}
+                `;
+                resultsList.appendChild(item);
+            });
+            
+            resultsDiv.classList.add('active');
+        }
+
+        function downloadFile() {
+            if (currentFile) {
+                window.location.href = `${API_BASE_URL}/download/${currentFile}`;
+            }
+        }
+
+        function showError(id, message) {
+            const error = document.getElementById(id);
+            error.textContent = message;
+            error.classList.add('active');
+        }
+
+        function hideError(id) {
+            const error = document.getElementById(id);
+            error.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
