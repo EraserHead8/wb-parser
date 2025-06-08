@@ -57,13 +57,14 @@
 
         .tab {
             flex: 1;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
             color: #666;
             position: relative;
+            font-size: 14px;
         }
 
         .tab:hover {
@@ -304,6 +305,12 @@
             <div class="tab" onclick="switchTab('position')">
                 Поиск позиции товара
             </div>
+            <div class="tab" onclick="switchTab('adrates')">
+                Анализ рекламных ставок
+            </div>
+            <div class="tab" onclick="switchTab('competitors')">
+                Анализ конкурентов
+            </div>
         </div>
 
         <div class="content">
@@ -372,6 +379,115 @@
                     <div id="results-list"></div>
                 </div>
             </div>
+
+            <!-- Вкладка анализа рекламных ставок -->
+            <div id="adrates-tab" class="tab-content">
+                <div class="input-group">
+                    <label for="search-query">Поисковый запрос:</label>
+                    <input type="text" id="search-query" placeholder="Например: дымоход">
+                    <p class="hint">Введите запрос для анализа рекламных ставок</p>
+                </div>
+
+                <div class="input-group">
+                    <label for="region">Регион:</label>
+                    <select id="region" style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                        <option value="-1114822" selected>Курск</option>
+                        <option value="-1257786">Москва</option>
+                        <option value="-1113276">Санкт-Петербург</option>
+                        <option value="-1114258">Новосибирск</option>
+                        <option value="-1113551">Екатеринбург</option>
+                        <option value="-2133462">Нижний Новгород</option>
+                        <option value="-1113719">Казань</option>
+                    </select>
+                </div>
+
+                <button class="button" onclick="analyzeAdRates()">
+                    <span id="adrates-button-text">📊 Анализировать ставки</span>
+                    <span class="spinner" style="display: none;"></span>
+                </button>
+
+                <div id="adrates-progress" class="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="adrates-progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="adrates-progress-text">
+                        Анализируем рекламные ставки...
+                    </div>
+                </div>
+
+                <div id="adrates-error" class="error"></div>
+
+                <div id="adrates-results" class="results">
+                    <h3>Анализ рекламных ставок</h3>
+                    <div style="overflow-x: auto;">
+                        <table id="adrates-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                            <thead>
+                                <tr style="background: #f5f5f5;">
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">№</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Позиция</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Тип</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Артикул</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">CPM</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Ставка</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adrates-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка анализа конкурентов -->
+            <div id="competitors-tab" class="tab-content">
+                <div class="input-group">
+                    <label for="competitor-url">Ссылка на ваш товар:</label>
+                    <input type="url" id="competitor-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
+                    <p class="hint">Введите ссылку на ваш товар для анализа конкурентов в категории</p>
+                </div>
+
+                <button class="button" onclick="analyzeCompetitors()">
+                    <span id="competitors-button-text">🔬 Анализировать конкурентов</span>
+                    <span class="spinner" style="display: none;"></span>
+                </button>
+
+                <div id="competitors-progress" class="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="competitors-progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="competitors-progress-text">
+                        Анализируем конкурентов...
+                    </div>
+                </div>
+
+                <div id="competitors-error" class="error"></div>
+
+                <div id="competitors-results" class="results">
+                    <h3>Анализ конкурентов в категории</h3>
+                    
+                    <div id="competitors-summary" style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none;">
+                        <h4 style="margin-top: 0;">Сводка по вашему товару:</h4>
+                        <div id="summary-content"></div>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table id="competitors-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                            <thead>
+                                <tr style="background: #f5f5f5;">
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Позиция</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Название</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Цена</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Рейтинг</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Отзывы</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Продавец</th>
+                                </tr>
+                            </thead>
+                            <tbody id="competitors-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -389,9 +505,15 @@
             if (tab === 'parser') {
                 document.querySelector('.tab:first-child').classList.add('active');
                 document.getElementById('parser-tab').classList.add('active');
-            } else {
-                document.querySelector('.tab:last-child').classList.add('active');
+            } else if (tab === 'position') {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
                 document.getElementById('position-tab').classList.add('active');
+            } else if (tab === 'adrates') {
+                document.querySelector('.tab:nth-child(3)').classList.add('active');
+                document.getElementById('adrates-tab').classList.add('active');
+            } else if (tab === 'competitors') {
+                document.querySelector('.tab:nth-child(4)').classList.add('active');
+                document.getElementById('competitors-tab').classList.add('active');
             }
         }
 
@@ -436,7 +558,7 @@
                 // Симуляция прогресса
                 let progressValue = 0;
                 const progressInterval = setInterval(() => {
-                    progressValue += Math.random() * 15;
+                    progressValue += Math.random() * 5;
                     if (progressValue > 90) progressValue = 90;
                     progressFill.style.width = progressValue + '%';
                     
@@ -444,11 +566,12 @@
                         'Загрузка страницы продавца...',
                         'Получение списка товаров...',
                         'Обработка данных товаров...',
-                        'Сбор дополнительной информации...',
+                        'Сбор информации о товарах...',
+                        'Обработка большого объема данных...',
                         'Формирование Excel файла...'
                     ];
-                    progressText.textContent = messages[Math.floor(progressValue / 20)] || 'Обработка...';
-                }, 500);
+                    progressText.textContent = messages[Math.floor(progressValue / 15)] || 'Обработка... Это может занять несколько минут для больших продавцов';
+                }, 800);
 
                 const data = await response.json();
                 
@@ -552,11 +675,18 @@
                 item.className = 'result-item';
                 
                 let positionText;
-                if (result.position > 0) {
-                    positionText = `Позиция: <strong>${result.position}</strong>`;
-                    if (result.position <= 10) {
+                let position = result.position;
+                
+                // Убеждаемся, что position - это число
+                if (position === null || position === undefined) {
+                    position = 0;
+                }
+                
+                if (position > 0) {
+                    positionText = `Позиция: <strong>${position}</strong>`;
+                    if (position <= 10) {
                         positionText += ' 🏆';
-                    } else if (result.position <= 50) {
+                    } else if (position <= 50) {
                         positionText += ' ✅';
                     }
                 } else {
@@ -567,6 +697,120 @@
                     <strong>${result.keyword}</strong> - ${positionText}
                 `;
                 resultsList.appendChild(item);
+            });
+            
+            resultsDiv.classList.add('active');
+        }
+
+        async function analyzeCompetitors() {
+            const productUrl = document.getElementById('competitor-url').value.trim();
+            
+            if (!productUrl) {
+                showError('competitors-error', 'Пожалуйста, введите ссылку на товар');
+                return;
+            }
+
+            const button = document.querySelector('#competitors-tab .button');
+            const buttonText = document.getElementById('competitors-button-text');
+            const spinner = button.querySelector('.spinner');
+            const progress = document.getElementById('competitors-progress');
+            const progressFill = document.getElementById('competitors-progress-fill');
+            const progressText = document.getElementById('competitors-progress-text');
+            const results = document.getElementById('competitors-results');
+            
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            progress.classList.add('active');
+            results.classList.remove('active');
+            hideError('competitors-error');
+
+            try {
+                progressText.textContent = 'Анализируем категорию товара...';
+                progressFill.style.width = '30%';
+                
+                const response = await fetch(`${API_BASE_URL}/analyze-competitors`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        product_url: productUrl
+                    })
+                });
+
+                progressFill.style.width = '80%';
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Ошибка при анализе');
+                }
+
+                const data = await response.json();
+                progressFill.style.width = '100%';
+                progressText.textContent = 'Анализ завершен!';
+                
+                setTimeout(() => {
+                    displayCompetitors(data);
+                }, 500);
+                
+            } catch (error) {
+                showError('competitors-error', 'Ошибка: ' + error.message);
+            } finally {
+                button.disabled = false;
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+                setTimeout(() => {
+                    progress.classList.remove('active');
+                }, 1000);
+            }
+        }
+
+        function displayCompetitors(data) {
+            const resultsDiv = document.getElementById('competitors-results');
+            const tbody = document.getElementById('competitors-tbody');
+            const summaryDiv = document.getElementById('competitors-summary');
+            const summaryContent = document.getElementById('summary-content');
+            
+            // Показываем сводку
+            if (data.summary) {
+                summaryContent.innerHTML = `
+                    <p><strong>Категория:</strong> ${data.summary.category}</p>
+                    <p><strong>Ваша позиция:</strong> ${data.summary.position}</p>
+                    <p><strong>Средняя цена в категории:</strong> ${data.summary.avg_price} ₽</p>
+                    <p><strong>Ваша цена:</strong> ${data.summary.your_price} ₽ 
+                        <span style="color: ${data.summary.price_status === 'выше' ? '#dc3545' : '#28a745'}">
+                            (${data.summary.price_status} среднего на ${Math.abs(Math.round(((data.summary.your_price - data.summary.avg_price) / data.summary.avg_price) * 100))}%)
+                        </span>
+                    </p>
+                    <p><strong>Средний рейтинг:</strong> ${data.summary.avg_rating}</p>
+                    <p><strong>Всего конкурентов проанализировано:</strong> ${data.summary.total_competitors}</p>
+                    <p><strong>Топ продавцов:</strong> ${data.summary.top_sellers.join(', ')}</p>
+                `;
+                summaryDiv.style.display = 'block';
+            }
+            
+            tbody.innerHTML = '';
+            
+            data.competitors.forEach((item) => {
+                const row = document.createElement('tr');
+                const isYours = item.article === data.your_product_id;
+                
+                row.style.background = isYours ? '#e8f5e9' : '';
+                row.innerHTML = `
+                    <td style="padding: 10px; border: 1px solid #e0e0e0;">${item.position}</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0;">
+                        <a href="https://www.wildberries.ru/catalog/${item.article}/detail.aspx" target="_blank" style="color: #667eea; text-decoration: none;">
+                            ${item.name}
+                        </a>
+                        ${isYours ? ' <strong>(Ваш товар)</strong>' : ''}
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0;">${item.price} ₽</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0;">⭐ ${item.rating}</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0;">${item.feedbacks}</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0;">${item.seller}</td>
+                `;
+                tbody.appendChild(row);
             });
             
             resultsDiv.classList.add('active');
@@ -587,6 +831,102 @@
         function hideError(id) {
             const error = document.getElementById(id);
             error.classList.remove('active');
+        }
+
+        async function analyzeAdRates() {
+            const query = document.getElementById('search-query').value.trim();
+            const region = document.getElementById('region').value;
+            
+            if (!query) {
+                showError('adrates-error', 'Пожалуйста, введите поисковый запрос');
+                return;
+            }
+
+            const button = document.querySelector('#adrates-tab .button');
+            const buttonText = document.getElementById('adrates-button-text');
+            const spinner = button.querySelector('.spinner');
+            const progress = document.getElementById('adrates-progress');
+            const progressFill = document.getElementById('adrates-progress-fill');
+            const progressText = document.getElementById('adrates-progress-text');
+            const results = document.getElementById('adrates-results');
+            
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            progress.classList.add('active');
+            results.classList.remove('active');
+            hideError('adrates-error');
+
+            try {
+                progressText.textContent = 'Получаем данные о рекламных ставках...';
+                progressFill.style.width = '30%';
+                
+                const response = await fetch(`${API_BASE_URL}/analyze-adrates`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        query: query,
+                        region: region
+                    })
+                });
+
+                progressFill.style.width = '80%';
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Ошибка при анализе');
+                }
+
+                const data = await response.json();
+                progressFill.style.width = '100%';
+                progressText.textContent = 'Анализ завершен!';
+                
+                setTimeout(() => {
+                    displayAdRates(data.results);
+                }, 500);
+                
+            } catch (error) {
+                showError('adrates-error', 'Ошибка: ' + error.message);
+            } finally {
+                button.disabled = false;
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+                setTimeout(() => {
+                    progress.classList.remove('active');
+                }, 1000);
+            }
+        }
+
+        function displayAdRates(results) {
+            const resultsDiv = document.getElementById('adrates-results');
+            const tbody = document.getElementById('adrates-tbody');
+            
+            tbody.innerHTML = '';
+            
+            results.forEach((item, index) => {
+                const row = document.createElement('tr');
+                const rowStyle = item.type === 'Реклама' ? 'background: #fff3cd;' : '';
+                
+                row.innerHTML = `
+                    <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${index + 1}</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${item.position}</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${item.type}</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">
+                        <a href="https://www.wildberries.ru/catalog/${item.article}/detail.aspx" target="_blank" style="color: #667eea; text-decoration: none;">
+                            ${item.article}
+                        </a>
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${item.cpm}</td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0; font-weight: bold; color: ${item.type === 'Реклама' ? '#28a745' : '#6c757d'}; ${rowStyle}">
+                        ${item.bid} ₽
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            resultsDiv.classList.add('active');
         }
     </script>
 </body>
