@@ -1342,8 +1342,11 @@ def save_to_pdf(products, filename):
 
 @app.route('/')
 def index():
-    """Главная страница"""
-    return send_from_directory('.', 'index.html')
+    return jsonify({"status": "ok", "message": "Wildberries Parser API is running"})
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "healthy"})
 
 @app.route('/parse', methods=['POST'])
 def parse():
