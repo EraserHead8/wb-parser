@@ -17,6 +17,10 @@ from reportlab.lib.units import inch
 import openai
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения из .env файла
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -1553,6 +1557,5 @@ def download_file(filename):
         return jsonify({'error': 'Файл не найден'}), 404
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    print(f"Запуск сервера на порту {port}")
-    app.run(debug=False, host='0.0.0.0', port=port)
+    print("Запуск сервера на порту 5001")
+    app.run(host='0.0.0.0', port=5001)

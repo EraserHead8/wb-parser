@@ -311,6 +311,9 @@
             <div class="tab" onclick="switchTab('competitors')">
                 Анализ конкурентов
             </div>
+            <div class="tab" onclick="switchTab('seo')">
+                SEO анализ
+            </div>
         </div>
 
         <div class="content">
@@ -488,6 +491,54 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Вкладка SEO анализа -->
+            <div id="seo-tab" class="tab-content">
+                <div class="input-group">
+                    <label for="seo-url">Ссылка на товар:</label>
+                    <input type="url" id="seo-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
+                    <p class="hint">Введите ссылку на товар для SEO анализа</p>
+                </div>
+
+                <button class="button" onclick="analyzeSEO()">
+                    <span id="seo-button-text">🔍 Анализировать SEO</span>
+                    <span class="spinner" style="display: none;"></span>
+                </button>
+
+                <div id="seo-progress" class="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="seo-progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="seo-progress-text">
+                        Анализируем SEO...
+                    </div>
+                </div>
+
+                <div id="seo-error" class="error"></div>
+
+                <div id="seo-results" class="results">
+                    <h3>Результаты SEO анализа</h3>
+                    
+                    <div id="seo-summary" style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h4 style="margin-top: 0;">Текущее описание:</h4>
+                        <div id="current-description" style="margin-bottom: 20px;"></div>
+                        
+                        <h4>Ключевые слова:</h4>
+                        <div id="keywords-list" style="margin-bottom: 20px;"></div>
+                        
+                        <h4>Рекомендации:</h4>
+                        <div id="seo-recommendations"></div>
+                    </div>
+
+                    <div id="optimized-description" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 20px; display: none;">
+                        <h4>Оптимизированное описание:</h4>
+                        <div id="optimized-text"></div>
+                        <button class="button secondary" style="margin-top: 15px;" onclick="copyOptimizedDescription()">
+                            📋 Копировать
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -514,6 +565,9 @@
             } else if (tab === 'competitors') {
                 document.querySelector('.tab:nth-child(4)').classList.add('active');
                 document.getElementById('competitors-tab').classList.add('active');
+            } else if (tab === 'seo') {
+                document.querySelector('.tab:nth-child(5)').classList.add('active');
+                document.getElementById('seo-tab').classList.add('active');
             }
         }
 
@@ -927,6 +981,112 @@
             });
             
             resultsDiv.classList.add('active');
+        }
+
+        async function analyzeSEO() {
+            const productUrl = document.getElementById('seo-url').value.trim();
+            
+            if (!productUrl) {
+                showError('seo-error', 'Пожалуйста, введите ссылку на товар');
+                return;
+            }
+
+            const button = document.querySelector('#seo-tab .button');
+            const buttonText = document.getElementById('seo-button-text');
+            const spinner = button.querySelector('.spinner');
+            const progress = document.getElementById('seo-progress');
+            const progressFill = document.getElementById('seo-progress-fill');
+            const progressText = document.getElementById('seo-progress-text');
+            const results = document.getElementById('seo-results');
+            
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            progress.classList.add('active');
+            results.classList.remove('active');
+            hideError('seo-error');
+
+            try {
+                progressText.textContent = 'Анализируем SEO...';
+                progressFill.style.width = '30%';
+                
+                const response = await fetch(`${API_BASE_URL}/analyze-seo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        product_url: productUrl
+                    })
+                });
+
+                progressFill.style.width = '80%';
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Ошибка при анализе');
+                }
+
+                const data = await response.json();
+                progressFill.style.width = '100%';
+                progressText.textContent = 'Анализ завершен!';
+                
+                setTimeout(() => {
+                    displaySEO(data);
+                }, 500);
+                
+            } catch (error) {
+                showError('seo-error', 'Ошибка: ' + error.message);
+            } finally {
+                button.disabled = false;
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+                setTimeout(() => {
+                    progress.classList.remove('active');
+                }, 1000);
+            }
+        }
+
+        function displaySEO(data) {
+            const resultsDiv = document.getElementById('seo-results');
+            const summaryDiv = document.getElementById('seo-summary');
+            const currentDescription = document.getElementById('current-description');
+            const keywordsList = document.getElementById('keywords-list');
+            const seoRecommendations = document.getElementById('seo-recommendations');
+            const optimizedDescription = document.getElementById('optimized-description');
+            const optimizedText = document.getElementById('optimized-text');
+            
+            // Показываем сводку
+            if (data.summary) {
+                summaryDiv.style.display = 'block';
+                currentDescription.textContent = data.summary.current_description;
+                keywordsList.textContent = data.summary.keywords.join(', ');
+                seoRecommendations.innerHTML = data.summary.recommendations.map(r => `<p>${r}</p>`).join('');
+            }
+            
+            // Показываем результаты SEO анализа
+            if (data.optimized_description) {
+                optimizedDescription.style.display = 'block';
+                optimizedText.textContent = data.optimized_description;
+            }
+            
+            resultsDiv.classList.add('active');
+        }
+
+        function copyOptimizedDescription() {
+            const optimizedText = document.getElementById('optimized-text');
+            const textToCopy = optimizedText.textContent;
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            
+            tempInput.select();
+            document.execCommand('copy');
+            
+            document.body.removeChild(tempInput);
+            
+            showSuccess('seo-success', 'Текст успешно скопирован!');
         }
     </script>
 </body>
