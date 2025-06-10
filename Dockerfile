@@ -28,6 +28,23 @@ RUN apt-get update && apt-get install -y \
     libasound2 \
     libatspi2.0-0 \
     libxshmfence1 \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libatspi2.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -39,7 +56,7 @@ RUN playwright install chromium
 RUN playwright install-deps
 
 # Create directory for file uploads
-RUN mkdir -p parsed_files
+RUN mkdir -p parsed_files && chmod 777 parsed_files
 
 # Copy application code
 COPY . .
@@ -49,9 +66,10 @@ ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
 ENV FLASK_APP=app_simple.py
 ENV FLASK_ENV=production
+ENV PYTHONPATH=/app
 
 # Expose the port
 EXPOSE 8000
 
 # Start the application with Gunicorn
-CMD gunicorn --bind 0.0.0.0:$PORT --log-level debug --workers 1 --threads 2 --timeout 120 app_simple:app 
+CMD gunicorn --bind 0.0.0.0:$PORT --log-level debug --workers 1 --threads 2 --timeout 120 --access-logfile - --error-logfile - app_simple:app 

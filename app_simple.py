@@ -28,7 +28,7 @@ CORS(app)
 # OpenAI API настройки
 openai.api_key = os.getenv('OPENAI_API_KEY')
 if not openai.api_key:
-    raise ValueError("OPENAI_API_KEY environment variable is not set")
+    print("WARNING: OPENAI_API_KEY environment variable is not set")
 
 # Папка для сохранения файлов
 UPLOAD_FOLDER = 'parsed_files'
@@ -1342,11 +1342,18 @@ def save_to_pdf(products, filename):
 
 @app.route('/')
 def index():
-    return jsonify({"status": "ok", "message": "Wildberries Parser API is running"})
+    return jsonify({
+        "status": "ok",
+        "message": "Wildberries Parser API is running",
+        "version": "1.0.0"
+    })
 
 @app.route('/health')
 def health():
-    return jsonify({"status": "healthy"})
+    return jsonify({
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat()
+    })
 
 @app.route('/parse', methods=['POST'])
 def parse():
