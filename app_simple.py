@@ -563,22 +563,28 @@ class WildberriesParser:
                     bid = int(product.get('bid', 0) or 0)
                     log = product.get('log', {})
                     advert_id = product.get('advertId', None)
-                    # Определяем тип рекламы
+                    # Экспериментальная логика: первые 4 позиции считаем рекламой, если есть advertId или CPM > 0
                     is_ad = False
-                    if cpm > 0:
+                    if position <= 4 and (advert_id or cpm > 0):
                         is_ad = True
                     if advert_id:
+                        is_ad = True
+                    if cpm > 0:
                         is_ad = True
                     if isinstance(log, dict) and log.get('tp') == 'a':
                         is_ad = True
                     ad_type = 'Автореклама' if is_ad else 'Поиск'
+                    # Логируем для анализа
+                    print(f"Позиция {position}: id={article}, name={name}, advertId={advert_id}, cpm={cpm}, bid={bid}, log={log}, ad_type={ad_type}")
                     results.append({
                         'position': position,
                         'type': ad_type,
                         'article': article,
                         'name': name,
                         'cpm': cpm,
-                        'bid': bid
+                        'bid': bid,
+                        'advertId': advert_id,
+                        'log': log
                     })
             return results
         except Exception as e:
