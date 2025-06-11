@@ -324,6 +324,14 @@
                     <input type="url" id="seller-url" placeholder="https://www.wildberries.ru/seller/12345">
                     <p class="hint">Примеры: https://www.wildberries.ru/seller/596424 или https://www.wildberries.ru/brands/596424</p>
                 </div>
+                <div class="input-group">
+                    <label for="file-format">Формат файла:</label>
+                    <select id="file-format">
+                        <option value="xlsx">Excel (.xlsx)</option>
+                        <option value="csv">CSV (.csv)</option>
+                        <option value="pdf">PDF (.pdf)</option>
+                    </select>
+                </div>
 
                 <button class="button" onclick="startParsing()">
                     <span id="parse-button-text">🚀 Начать парсинг</span>
@@ -430,6 +438,7 @@
                                     <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Позиция</th>
                                     <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Тип</th>
                                     <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Артикул</th>
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Название</th>
                                     <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">CPM</th>
                                     <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Ставка</th>
                                 </tr>
@@ -573,6 +582,7 @@
 
         async function startParsing() {
             const url = document.getElementById('seller-url').value.trim();
+            const format = document.getElementById('file-format').value;
             if (!url) {
                 showError('parse-error', 'Пожалуйста, введите ссылку на продавца');
                 return;
@@ -599,7 +609,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ seller_url: url })
+                    body: JSON.stringify({ seller_url: url, format: format })
                 });
 
                 console.log('Статус ответа:', response.status);
@@ -956,13 +966,10 @@
         function displayAdRates(results) {
             const resultsDiv = document.getElementById('adrates-results');
             const tbody = document.getElementById('adrates-tbody');
-            
             tbody.innerHTML = '';
-            
             results.forEach((item, index) => {
                 const row = document.createElement('tr');
                 const rowStyle = item.type === 'Реклама' ? 'background: #fff3cd;' : '';
-                
                 row.innerHTML = `
                     <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${index + 1}</td>
                     <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${item.position}</td>
@@ -972,6 +979,7 @@
                             ${item.article}
                         </a>
                     </td>
+                    <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${item.name || ''}</td>
                     <td style="padding: 10px; border: 1px solid #e0e0e0; ${rowStyle}">${item.cpm}</td>
                     <td style="padding: 10px; border: 1px solid #e0e0e0; font-weight: bold; color: ${item.type === 'Реклама' ? '#28a745' : '#6c757d'}; ${rowStyle}">
                         ${item.bid} ₽
@@ -979,7 +987,6 @@
                 `;
                 tbody.appendChild(row);
             });
-            
             resultsDiv.classList.add('active');
         }
 

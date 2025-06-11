@@ -557,13 +557,17 @@ class WildberriesParser:
             if data.get('data') and data['data'].get('products'):
                 for product in data['data']['products']:
                     position += 1
+                    article = product.get('id')
+                    name = product.get('name', '')
+                    cpm = int(product.get('cpm', 0) or 0)
+                    bid = int(product.get('bid', 0) or 0)
                     results.append({
                         'position': position,
                         'type': product.get('advertType', 'Поиск'),
-                        'id': product.get('id'),
-                        'name': product.get('name', ''),
-                        'cpm': product.get('cpm', 0),
-                        'bid': product.get('bid', 0)
+                        'article': article,
+                        'name': name,
+                        'cpm': cpm,
+                        'bid': bid
                     })
             return results
         except Exception as e:
