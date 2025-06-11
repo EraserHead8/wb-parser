@@ -561,9 +561,20 @@ class WildberriesParser:
                     name = product.get('name', '')
                     cpm = int(product.get('cpm', 0) or 0)
                     bid = int(product.get('bid', 0) or 0)
+                    log = product.get('log', {})
+                    advert_id = product.get('advertId', None)
+                    # Определяем тип рекламы
+                    is_ad = False
+                    if cpm > 0:
+                        is_ad = True
+                    if advert_id:
+                        is_ad = True
+                    if isinstance(log, dict) and log.get('tp') == 'a':
+                        is_ad = True
+                    ad_type = 'Автореклама' if is_ad else 'Поиск'
                     results.append({
                         'position': position,
-                        'type': product.get('advertType', 'Поиск'),
+                        'type': ad_type,
                         'article': article,
                         'name': name,
                         'cpm': cpm,
