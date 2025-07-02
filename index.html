@@ -36,6 +36,7 @@
             color: white;
             padding: 30px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
         .header h1 {
@@ -117,18 +118,21 @@
         .input-group label {
             display: block;
             margin-bottom: 10px;
-            color: #333;
+            color: #222;
             font-weight: 500;
             font-size: 16px;
         }
 
         .input-group input,
-        .input-group textarea {
+        .input-group textarea,
+        select {
             width: 100%;
             padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
+            border: 2px solid #b300ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-shadow: 0 0 8px #b300ff44;
+            color: #00eaff;
             transition: all 0.3s ease;
             font-family: inherit;
         }
@@ -139,10 +143,11 @@
         }
 
         .input-group input:focus,
-        .input-group textarea:focus {
+        .input-group textarea:focus,
+        select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #00eaff;
+            box-shadow: 0 0 16px #00eaff;
         }
 
         .button {
@@ -289,268 +294,880 @@
         .error.active {
             display: block;
         }
+
+        /* --- Responsive tables for reviews --- */
+        @media (max-width: 900px) {
+            #reviews-results table, #reviews-results thead, #reviews-results tbody, #reviews-results th, #reviews-results td, #reviews-results tr {
+                display: block;
+                width: 100%;
+            }
+            #reviews-results thead {
+                display: none;
+            }
+            #reviews-results tr {
+                margin-bottom: 18px;
+                border-bottom: 2px solid #e0e0e0;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+                padding: 8px 0;
+            }
+            #reviews-results td {
+                border: none;
+                border-bottom: 1px solid #f0f0f0;
+                position: relative;
+                padding-left: 48%;
+                min-height: 36px;
+                font-size: 15px;
+                box-sizing: border-box;
+                background: #fff;
+            }
+            #reviews-results td:before {
+                position: absolute;
+                top: 8px;
+                left: 12px;
+                width: 44%;
+                white-space: pre-wrap;
+                font-weight: bold;
+                color: #888;
+                font-size: 13px;
+                content: attr(data-label);
+            }
+        }
+        @media (max-width: 600px) {
+            #reviews-results td {
+                font-size: 13px;
+                padding-left: 46%;
+            }
+            #reviews-results tr {
+                padding: 4px 0;
+            }
+            .neon-logo svg { width: 70px; height: 70px; }
+            .neon-logo-text { font-size: 1.2rem; }
+        }
+        #reviews-results table {
+          background: transparent;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 4px 32px rgba(102,126,234,0.08);
+        }
+        #reviews-results thead tr {
+          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        #reviews-results th {
+          color: #fff;
+          font-weight: 700;
+          font-size: 15px;
+          padding: 12px 8px;
+          border: none;
+          letter-spacing: 0.5px;
+        }
+        #reviews-results tbody tr {
+          transition: background 0.25s, box-shadow 0.2s;
+          border: none;
+        }
+        #reviews-results tbody tr:nth-child(even) {
+          background: linear-gradient(90deg, #f5f7fa 0%, #e9e4f0 100%);
+        }
+        #reviews-results tbody tr:nth-child(odd) {
+          background: linear-gradient(90deg, #f3f0fa 0%, #e0e7ff 100%);
+        }
+        #reviews-results tbody tr:hover {
+          background: linear-gradient(90deg, #e0e7ff 0%, #c3aed6 100%);
+          box-shadow: 0 2px 16px rgba(102,126,234,0.13);
+        }
+        #reviews-results td {
+          border: none;
+          font-size: 15px;
+          color: #222;
+          padding: 10px 8px;
+          background: transparent;
+        }
+        #reviews-results td.review-text-cell {
+          cursor: pointer;
+          color: #4f5bd5;
+          text-decoration: underline;
+          transition: color 0.2s;
+        }
+        #reviews-results td.review-text-cell:hover {
+          color: #2d3a8c;
+        }
+        /* Модальное окно отзывов */
+        #review-modal {
+          display: none;
+          position: fixed;
+          z-index: 10000;
+          left: 0; top: 0; width: 100vw; height: 100vh;
+          background: rgba(40, 48, 80, 0.25);
+          align-items: center;
+          justify-content: center;
+          animation: fadeInBg 0.3s;
+        }
+        @keyframes fadeInBg {
+          from { background: rgba(40,48,80,0); }
+          to { background: rgba(40,48,80,0.25); }
+        }
+        #review-modal .modal-content {
+          background: #fff;
+          border-radius: 18px;
+          max-width: 95vw;
+          width: 420px;
+          padding: 32px 28px 24px 28px;
+          box-shadow: 0 8px 40px rgba(102,126,234,0.18);
+          position: relative;
+          animation: modalPop 0.25s cubic-bezier(.4,1.4,.6,1) both;
+        }
+        @keyframes modalPop {
+          from { transform: translateY(40px) scale(0.95); opacity: 0; }
+          to { transform: none; opacity: 1; }
+        }
+        #review-modal .close-btn {
+          position: absolute; right: 18px; top: 18px;
+          background: none; border: none; font-size: 26px; color: #888; cursor: pointer;
+          transition: color 0.2s;
+        }
+        #review-modal .close-btn:hover { color: #4f5bd5; }
+        #review-modal h3 {
+          margin-top: 0; margin-bottom: 18px; font-size: 22px; font-weight: 700; color: #4f5bd5; display: flex; align-items: center; gap: 8px;
+        }
+        #review-modal .review-info {
+          margin-bottom: 12px; color: #222; font-size: 15px;
+        }
+        #review-modal .review-label { font-weight: 600; color: #667eea; }
+        #review-modal textarea {
+          width: 100%; min-height: 90px; margin-bottom: 14px; resize: vertical;
+          border-radius: 8px; border: 1.5px solid #e0e0e0; font-size: 15px; padding: 10px;
+          transition: border 0.2s;
+        }
+        #review-modal textarea:focus { border-color: #667eea; outline: none; }
+        #review-modal .modal-btn {
+          width: 100%; background: linear-gradient(90deg,#667eea,#4f5bd5);
+          color: #fff; padding: 12px 0; border: none; border-radius: 8px; font-size: 17px; font-weight: 600; cursor: pointer;
+          margin-top: 4px; transition: background 0.2s;
+        }
+        #review-modal .modal-btn:hover { background: linear-gradient(90deg,#4f5bd5,#667eea); }
+        #review-modal .modal-status {
+          margin-top: 12px; color: #c33; font-size: 15px;
+        }
+        #review-modal .modal-answer {
+          background: #f5f8ff; border-radius: 8px; padding: 10px 12px; color: #2d3a8c; margin-top: 10px; font-size: 15px;
+        }
+        @media (max-width: 600px) {
+          #review-modal .modal-content { width: 98vw; padding: 18px 6vw 18px 6vw; }
+          #review-modal h3 { font-size: 18px; }
+        }
+        /* --- Новый стиль для модального окна ЛК --- */
+        #profile-modal .modal-content, #profile-modal > div {
+          background: #fff;
+          border-radius: 22px;
+          max-width: 98vw;
+          width: 420px;
+          padding: 36px 32px 28px 32px;
+          box-shadow: 0 8px 40px rgba(102,126,234,0.18);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+        }
+        #profile-modal .close-btn {
+          position: absolute;
+          right: 18px;
+          top: 18px;
+          background: none;
+          border: none;
+          font-size: 28px;
+          color: #b0b8e0;
+          cursor: pointer;
+          transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        #profile-modal .close-btn:hover {
+          color: #fff;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          box-shadow: 0 2px 8px rgba(102,126,234,0.18);
+        }
+        .profile-tab-btn {
+          flex: 1;
+          padding: 12px 0;
+          background: none;
+          border: none;
+          font-size: 17px;
+          font-weight: 600;
+          color: #667eea;
+          border-radius: 12px 12px 0 0;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+          margin-bottom: -2px;
+          border-bottom: 2px solid transparent;
+        }
+        .profile-tab-btn.active {
+          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+          color: #fff;
+          border-bottom: 2px solid #764ba2;
+          box-shadow: 0 2px 8px rgba(102,126,234,0.08);
+        }
+        #profile-modal .input-group label {
+          color: #4f5bd5;
+          font-size: 15px;
+          font-weight: 600;
+          margin-bottom: 7px;
+        }
+        #profile-modal .input-group input,
+        #profile-modal .input-group textarea {
+          width: 100%;
+          padding: 13px 14px;
+          border: 2px solid #e0e0e0;
+          border-radius: 10px;
+          font-size: 15px;
+          margin-bottom: 0;
+          transition: border 0.2s, box-shadow 0.2s;
+          font-family: inherit;
+          background: #f8faff;
+        }
+        #profile-modal .input-group input:focus,
+        #profile-modal .input-group textarea:focus {
+          border-color: #667eea;
+          box-shadow: 0 0 0 2px #e0e7ff;
+        }
+        #profile-modal .modal-btn {
+          width: 100%;
+          background: linear-gradient(90deg,#667eea,#4f5bd5);
+          color: #fff;
+          padding: 14px 0;
+          border: none;
+          border-radius: 10px;
+          font-size: 17px;
+          font-weight: 700;
+          cursor: pointer;
+          margin-top: 18px;
+          margin-bottom: 0;
+          transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+          box-shadow: 0 2px 8px rgba(102,126,234,0.10);
+        }
+        #profile-modal .modal-btn:hover {
+          background: linear-gradient(90deg,#4f5bd5,#667eea);
+          transform: translateY(-2px) scale(1.03);
+          box-shadow: 0 4px 16px rgba(102,126,234,0.18);
+        }
+        #profile-modal select {
+          width: 100%;
+          padding: 13px 14px;
+          border: 2px solid #e0e0e0;
+          border-radius: 10px;
+          font-size: 15px;
+          background: #f8faff;
+          font-family: inherit;
+          margin-bottom: 0;
+          transition: border 0.2s, box-shadow 0.2s;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          box-shadow: none;
+        }
+        #profile-modal select:focus {
+          border-color: #667eea;
+          box-shadow: 0 0 0 2px #e0e7ff;
+          outline: none;
+        }
+        #profile-modal .input-group {
+          margin-bottom: 22px;
+        }
+        #profile-save-status {
+          margin-top: 10px;
+          color: #4caf50;
+          font-size: 15px;
+          display: none;
+          text-align: center;
+        }
+        @media (max-width: 600px) {
+          #profile-modal .modal-content, #profile-modal > div {
+            width: 98vw;
+            padding: 18px 6vw 18px 6vw;
+          }
+          .profile-tab-btn { font-size: 15px; }
+        }
+        /* Неоновый стиль для названия */
+        .neon-title {
+          font-family: 'Montserrat', Arial, sans-serif;
+          font-size: 2.7rem;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 0.18em;
+          background: linear-gradient(90deg, #00eaff 0%, #b39ddb 30%, #fff 60%, #b39ddb 85%, #764ba2 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: #00eaff;
+          text-shadow:
+            0 0 16px #00eaff,
+            0 0 24px #00eaff,
+            0 0 32px #b39ddb,
+            0 0 48px #fff,
+            0 2px 18px #fff,
+            0 1px 0 #fff;
+          line-height: 1.1;
+          text-align: center;
+          z-index: 2;
+          position: relative;
+          filter: brightness(1.15) contrast(1.15);
+        }
+        @media (max-width: 600px) {
+          .neon-title { font-size: 1.5rem; }
+        }
+        /* Неоновый стиль для названия с шлейфом */
+        .neon-title-wrap {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          margin-bottom: 0.2em;
+        }
+        .neon-title {
+          font-family: 'Montserrat', Arial, sans-serif;
+          font-size: 2.7rem;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 0.18em;
+          background: linear-gradient(90deg, #00eaff 0%, #b39ddb 30%, #fff 60%, #b39ddb 85%, #764ba2 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: #00eaff;
+          text-shadow:
+            0 0 16px #00eaff,
+            0 0 24px #00eaff,
+            0 0 32px #b39ddb,
+            0 0 48px #fff,
+            0 2px 18px #fff,
+            0 1px 0 #fff;
+          line-height: 1.1;
+          text-align: center;
+          z-index: 2;
+          position: relative;
+          filter: brightness(1.15) contrast(1.15);
+        }
+        .neon-title-trail {
+          position: absolute;
+          left: 50%;
+          top: 80%;
+          transform: translateX(-50%) scaleY(0.8);
+          width: 120%;
+          height: 1.1em;
+          z-index: 1;
+          pointer-events: none;
+          opacity: 0.7;
+        }
+        @media (max-width: 600px) {
+          .neon-title { font-size: 1.5rem; }
+          .neon-title-trail { height: 1em; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🛍️ Wildberries Parser</h1>
-            <p>Парсинг товаров и анализ позиций</p>
+    <div id="auth-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:16px; max-width:400px; margin:auto; padding:32px 24px; box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+            <h2 id="auth-title" style="text-align:center; margin-bottom:24px;">Вход</h2>
+            <div id="auth-error" style="color:#c33; margin-bottom:12px; display:none;"></div>
+            <form id="auth-form-login" onsubmit="return false;">
+                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 1.5rem; font-weight: 700; color: #222; letter-spacing: 0.08em; text-align: center; margin-bottom: 1em;">EraserHead</div>
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:18px;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
+                        <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
+                    </span>
+                    <span class="neon-title-wrap">
+                        <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
+                        <svg class="neon-title-trail" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trail2" x1="0" y1="20" x2="400" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity="0.5"/><stop offset="0.2" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="0.5" stop-color="#764ba2" stop-opacity="0.2"/><stop offset="0.8" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="1" stop-color="#fff" stop-opacity="0.5"/></linearGradient></defs><ellipse cx="200" cy="20" rx="180" ry="13" fill="url(#trail2)"/><ellipse cx="200" cy="20" rx="120" ry="7" fill="#fff" fill-opacity="0.10"/></svg>
+                    </span>
+                </div>
+                <input id="login-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+                <input id="login-password" type="password" placeholder="Пароль" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+                <button class="button" style="width:100%;margin-bottom:8px;" onclick="loginUser()">Войти</button>
+                <div style="text-align:center; margin-top:8px;">
+                    Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрироваться</a>
+                </div>
+            </form>
+            <form id="auth-form-register" style="display:none;" onsubmit="return false;">
+                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 1.5rem; font-weight: 700; color: #222; letter-spacing: 0.08em; text-align: center; margin-bottom: 1em;">EraserHead</div>
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:18px;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
+                        <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
+                    </span>
+                    <span class="neon-title-wrap">
+                        <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
+                        <svg class="neon-title-trail" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trail3" x1="0" y1="20" x2="400" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity="0.5"/><stop offset="0.2" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="0.5" stop-color="#764ba2" stop-opacity="0.2"/><stop offset="0.8" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="1" stop-color="#fff" stop-opacity="0.5"/></linearGradient></defs><ellipse cx="200" cy="20" rx="180" ry="13" fill="url(#trail3)"/><ellipse cx="200" cy="20" rx="120" ry="7" fill="#fff" fill-opacity="0.10"/></svg>
+                    </span>
+                </div>
+                <input id="register-name" type="text" placeholder="Имя" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+                <input id="register-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+                <input id="register-password" type="password" placeholder="Пароль" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+                <button class="button" style="width:100%;margin-bottom:8px;" onclick="registerUser()">Зарегистрироваться</button>
+                <div style="text-align:center; margin-top:8px;">
+                    Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a>
+                </div>
+            </form>
         </div>
-
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('parser')">
-                Парсинг товаров продавца
-            </div>
-            <div class="tab" onclick="switchTab('position')">
-                Поиск позиции товара
-            </div>
-            <div class="tab" onclick="switchTab('adrates')">
-                Анализ рекламных ставок
-            </div>
-            <div class="tab" onclick="switchTab('competitors')">
-                Анализ конкурентов
-            </div>
-            <div class="tab" onclick="switchTab('seo')">
-                SEO анализ
-            </div>
+    </div>
+    <div id="profile-modal" style="display:none; position:fixed; z-index:10001; left:0; top:0; width:100vw; height:100vh; background:rgba(40,48,80,0.18); align-items:center; justify-content:center;">
+      <div class="modal-content">
+        <button onclick="closeProfileModal()" class="close-btn" aria-label="Закрыть">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L16 16M16 6L6 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+        <div style="display:flex; gap:8px; margin-bottom:22px;">
+          <button class="profile-tab-btn" onclick="showProfileTab('general')" id="profile-tab-general">
+            <span style="vertical-align:middle; margin-right:6px;">
+              <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><circle cx="9" cy="6.5" r="3.5" stroke="#667eea" stroke-width="1.5"/><path d="M2.5 15c0-2.485 2.239-4.5 5-4.5h3c2.761 0 5 2.015 5 4.5" stroke="#667eea" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>Общие
+          </button>
+          <button class="profile-tab-btn" onclick="showProfileTab('reviews')" id="profile-tab-reviews">
+            <span style="vertical-align:middle; margin-right:6px;">
+              <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M3 15v-2a2 2 0 012-2h8a2 2 0 012 2v2" stroke="#667eea" stroke-width="1.5"/><rect x="3" y="3" width="12" height="8" rx="2" stroke="#667eea" stroke-width="1.5"/></svg>
+            </span>Отзывы
+          </button>
         </div>
+        <div id="profile-tab-content-general">
+          <div class="input-group"><label>Имя</label><input id="profile-name" type="text"></div>
+          <div class="input-group"><label>WB API токен</label><input id="profile-wb-token" type="text"></div>
+          <div class="input-group"><label>Supplier ID</label><input id="profile-supplier-id" type="text"></div>
+          <div class="input-group"><label>OpenAI API токен <span style='color:#888;font-size:13px;'>(опционально, если не задан — используется дефолтный)</span></label><input id="profile-ai-token" type="text" placeholder="sk-..." autocomplete="off"></div>
+          <button onclick="saveProfileSettings()" class="modal-btn">Сохранить</button>
+        </div>
+        <div id="profile-tab-content-reviews" style="display:none;">
+          <div class="input-group"><label>Промт для генерации ответов</label><textarea id="profile-ai-prompt"></textarea></div>
+          <div class="input-group"><label>Режим ответа на отзывы</label>
+            <select id="profile-ai-reply-mode">
+              <option value="manual">Вручную (вы сами пишете ответ)</option>
+              <option value="suggest">Сгенерировать (ИИ предлагает ответ, вы редактируете и отправляете)</option>
+              <option value="auto">Автоматически (ИИ сам отвечает на все новые отзывы)</option>
+            </select>
+            <div style="color:#888;font-size:13px;margin-top:6px;">Выберите режим: <b>Вручную</b> — только ручной ответ. <b>Сгенерировать</b> — появляется кнопка для генерации ответа ИИ. <b>Автоматически</b> — ИИ сам отвечает на все новые отзывы (может занять до 5 минут).</div>
+          </div>
+          <button onclick="saveProfileSettings()" class="modal-btn">Сохранить</button>
+        </div>
+        <div id="profile-save-status">Сохранено!</div>
+      </div>
+    </div>
+    <div id="main-app" style="display:none;">
+        <div class="container">
+            <!-- Шапка -->
+            <div class="header">
+                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 2rem; font-weight: 700; color: #222; letter-spacing: 0.08em; text-align: center; margin-bottom: 0.5em;">EraserHead</div>
+            </div>
 
-        <div class="content">
-            <!-- Вкладка парсинга товаров -->
-            <div id="parser-tab" class="tab-content active">
-                <div class="input-group">
-                    <label for="seller-url">Ссылка на продавца Wildberries:</label>
-                    <input type="url" id="seller-url" placeholder="https://www.wildberries.ru/seller/12345">
-                    <p class="hint">Примеры: https://www.wildberries.ru/seller/596424 или https://www.wildberries.ru/brands/596424</p>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('parser')">
+                    Парсинг товаров продавца
                 </div>
-                <div class="input-group">
-                    <label for="file-format">Формат файла:</label>
-                    <select id="file-format">
-                        <option value="xlsx">Excel (.xlsx)</option>
-                        <option value="csv">CSV (.csv)</option>
-                        <option value="pdf">PDF (.pdf)</option>
-                    </select>
+                <div class="tab" onclick="switchTab('position')">
+                    Поиск позиции товара
                 </div>
+                <div class="tab" onclick="switchTab('adrates')">
+                    Анализ рекламных ставок
+                </div>
+                <div class="tab" onclick="switchTab('competitors')">
+                    Анализ конкурентов
+                </div>
+                <div class="tab" onclick="switchTab('seo')">
+                    SEO анализ
+                </div>
+                <div class="tab" onclick="switchTab('my-campaigns')">Мои рекламные кампании</div>
+                <div class="tab" onclick="switchTab('my-products')">Мои товары</div>
+                <div class="tab" onclick="switchTab('reviews')">Отзывы</div>
+            </div>
 
-                <button class="button" onclick="startParsing()">
-                    <span id="parse-button-text">🚀 Начать парсинг</span>
-                    <span class="spinner" style="display: none;"></span>
-                </button>
-
-                <div id="parse-progress" class="progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill"></div>
+            <div class="content">
+                <!-- Вкладка парсинга товаров -->
+                <div id="parser-tab" class="tab-content active">
+                    <div class="input-group">
+                        <label for="seller-url">Ссылка на продавца Wildberries:</label>
+                        <input type="url" id="seller-url" placeholder="https://www.wildberries.ru/seller/12345">
+                        <p class="hint">Примеры: https://www.wildberries.ru/seller/596424 или https://www.wildberries.ru/brands/596424</p>
                     </div>
-                    <div class="progress-text" id="progress-text">
-                        Инициализация парсера...
+                    <div class="input-group">
+                        <label for="file-format">Формат файла:</label>
+                        <select id="file-format">
+                            <option value="xlsx">Excel (.xlsx)</option>
+                            <option value="csv">CSV (.csv)</option>
+                            <option value="pdf">PDF (.pdf)</option>
+                        </select>
                     </div>
-                </div>
 
-                <div id="parse-error" class="error"></div>
-
-                <div id="download-section" style="display: none; margin-top: 30px;">
-                    <button class="button secondary" onclick="downloadFile()">
-                        📥 Скачать Excel файл
+                    <button class="button" onclick="startParsing()">
+                        <span id="parse-button-text">🚀 Начать парсинг</span>
+                        <span class="spinner" style="display: none;"></span>
                     </button>
-                </div>
-            </div>
 
-            <!-- Вкладка поиска позиции -->
-            <div id="position-tab" class="tab-content">
-                <div class="input-group">
-                    <label for="product-url">Ссылка на товар:</label>
-                    <input type="url" id="product-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
-                </div>
-
-                <div class="input-group">
-                    <label for="keywords">Ключевые слова для поиска:</label>
-                    <textarea id="keywords" placeholder="платье летнее; сарафан женский; платье миди"></textarea>
-                    <p class="hint">Введите до 10 ключевых слов или фраз через точку с запятой</p>
-                </div>
-
-                <button class="button" onclick="checkPositions()">
-                    <span id="position-button-text">🔍 Проверить позиции</span>
-                    <span class="spinner" style="display: none;"></span>
-                </button>
-
-                <div id="position-progress" class="progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="position-progress-fill"></div>
-                    </div>
-                    <div class="progress-text" id="position-progress-text">
-                        Поиск позиций товара...
-                    </div>
-                </div>
-
-                <div id="position-error" class="error"></div>
-
-                <div id="position-results" class="results">
-                    <h3>Результаты поиска:</h3>
-                    <div id="results-list"></div>
-                </div>
-            </div>
-
-            <!-- Вкладка анализа рекламных ставок -->
-            <div id="adrates-tab" class="tab-content">
-                <div class="input-group">
-                    <label for="search-query">Поисковый запрос:</label>
-                    <input type="text" id="search-query" placeholder="Например: дымоход">
-                    <p class="hint">Введите запрос для анализа рекламных ставок</p>
-                </div>
-
-                <div class="input-group">
-                    <label for="region">Регион:</label>
-                    <select id="region" style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
-                        <option value="-1114822" selected>Курск</option>
-                        <option value="-1257786">Москва</option>
-                        <option value="-1113276">Санкт-Петербург</option>
-                        <option value="-1114258">Новосибирск</option>
-                        <option value="-1113551">Екатеринбург</option>
-                        <option value="-2133462">Нижний Новгород</option>
-                        <option value="-1113719">Казань</option>
-                    </select>
-                </div>
-
-                <button class="button" onclick="analyzeAdRates()">
-                    <span id="adrates-button-text">📊 Анализировать ставки</span>
-                    <span class="spinner" style="display: none;"></span>
-                </button>
-
-                <div id="adrates-progress" class="progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="adrates-progress-fill"></div>
-                    </div>
-                    <div class="progress-text" id="adrates-progress-text">
-                        Анализируем рекламные ставки...
-                    </div>
-                </div>
-
-                <div id="adrates-error" class="error"></div>
-
-                <div id="adrates-results" class="results">
-                    <h3>Анализ рекламных ставок</h3>
-                    <div style="overflow-x: auto;">
-                        <table id="adrates-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                            <thead>
-                                <tr style="background: #f5f5f5;">
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">№</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Позиция</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Тип</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Артикул</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Название</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">CPM</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Ставка</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adrates-tbody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка анализа конкурентов -->
-            <div id="competitors-tab" class="tab-content">
-                <div class="input-group">
-                    <label for="competitor-url">Ссылка на ваш товар:</label>
-                    <input type="url" id="competitor-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
-                    <p class="hint">Введите ссылку на ваш товар для анализа конкурентов в категории</p>
-                </div>
-
-                <button class="button" onclick="analyzeCompetitors()">
-                    <span id="competitors-button-text">🔬 Анализировать конкурентов</span>
-                    <span class="spinner" style="display: none;"></span>
-                </button>
-
-                <div id="competitors-progress" class="progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="competitors-progress-fill"></div>
-                    </div>
-                    <div class="progress-text" id="competitors-progress-text">
-                        Анализируем конкурентов...
-                    </div>
-                </div>
-
-                <div id="competitors-error" class="error"></div>
-
-                <div id="competitors-results" class="results">
-                    <h3>Анализ конкурентов в категории</h3>
-                    
-                    <div id="competitors-summary" style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none;">
-                        <h4 style="margin-top: 0;">Сводка по вашему товару:</h4>
-                        <div id="summary-content"></div>
+                    <div id="parse-progress" class="progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="progress-text">
+                            Инициализация парсера...
+                        </div>
                     </div>
 
-                    <div style="overflow-x: auto;">
-                        <table id="competitors-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                            <thead>
-                                <tr style="background: #f5f5f5;">
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Позиция</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Название</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Цена</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Рейтинг</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Отзывы</th>
-                                    <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Продавец</th>
-                                </tr>
-                            </thead>
-                            <tbody id="competitors-tbody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                    <div id="parse-error" class="error"></div>
 
-            <!-- Вкладка SEO анализа -->
-            <div id="seo-tab" class="tab-content">
-                <div class="input-group">
-                    <label for="seo-url">Ссылка на товар:</label>
-                    <input type="url" id="seo-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
-                    <p class="hint">Введите ссылку на товар для SEO анализа</p>
-                </div>
-
-                <button class="button" onclick="analyzeSEO()">
-                    <span id="seo-button-text">🔍 Анализировать SEO</span>
-                    <span class="spinner" style="display: none;"></span>
-                </button>
-
-                <div id="seo-progress" class="progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="seo-progress-fill"></div>
-                    </div>
-                    <div class="progress-text" id="seo-progress-text">
-                        Анализируем SEO...
-                    </div>
-                </div>
-
-                <div id="seo-error" class="error"></div>
-
-                <div id="seo-results" class="results">
-                    <h3>Результаты SEO анализа</h3>
-                    
-                    <div id="seo-summary" style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                        <h4 style="margin-top: 0;">Текущее описание:</h4>
-                        <div id="current-description" style="margin-bottom: 20px;"></div>
-                        
-                        <h4>Ключевые слова:</h4>
-                        <div id="keywords-list" style="margin-bottom: 20px;"></div>
-                        
-                        <h4>Рекомендации:</h4>
-                        <div id="seo-recommendations"></div>
-                    </div>
-
-                    <div id="optimized-description" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 20px; display: none;">
-                        <h4>Оптимизированное описание:</h4>
-                        <div id="optimized-text"></div>
-                        <button class="button secondary" style="margin-top: 15px;" onclick="copyOptimizedDescription()">
-                            📋 Копировать
+                    <div id="download-section" style="display: none; margin-top: 30px;">
+                        <button class="button secondary" onclick="downloadFile()">
+                            📥 Скачать Excel файл
                         </button>
+                    </div>
+                </div>
+
+                <!-- Вкладка поиска позиции -->
+                <div id="position-tab" class="tab-content">
+                    <div class="input-group">
+                        <label for="product-url">Ссылка на товар:</label>
+                        <input type="url" id="product-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="keywords">Ключевые слова для поиска:</label>
+                        <textarea id="keywords" placeholder="платье летнее; сарафан женский; платье миди"></textarea>
+                        <p class="hint">Введите до 10 ключевых слов или фраз через точку с запятой</p>
+                    </div>
+
+                    <button class="button" onclick="checkPositions()">
+                        <span id="position-button-text">🔍 Проверить позиции</span>
+                        <span class="spinner" style="display: none;"></span>
+                    </button>
+
+                    <div id="position-progress" class="progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="position-progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="position-progress-text">
+                            Поиск позиций товара...
+                        </div>
+                    </div>
+
+                    <div id="position-error" class="error"></div>
+
+                    <div id="position-results" class="results">
+                        <h3>Результаты поиска:</h3>
+                        <div id="results-list"></div>
+                    </div>
+                </div>
+
+                <!-- Вкладка анализа рекламных ставок -->
+                <div id="adrates-tab" class="tab-content">
+                    <div class="input-group">
+                        <label for="search-query">Поисковый запрос:</label>
+                        <input type="text" id="search-query" placeholder="Например: дымоход">
+                        <p class="hint">Введите запрос для анализа рекламных ставок</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="region">Регион:</label>
+                        <select id="region" style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                            <option value="-1114822" selected>Курск</option>
+                            <option value="-1257786">Москва</option>
+                            <option value="-1113276">Санкт-Петербург</option>
+                            <option value="-1114258">Новосибирск</option>
+                            <option value="-1113551">Екатеринбург</option>
+                            <option value="-2133462">Нижний Новгород</option>
+                            <option value="-1113719">Казань</option>
+                        </select>
+                    </div>
+
+                    <button class="button" onclick="analyzeAdRates()">
+                        <span id="adrates-button-text">📊 Анализировать ставки</span>
+                        <span class="spinner" style="display: none;"></span>
+                    </button>
+
+                    <div id="adrates-progress" class="progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="adrates-progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="adrates-progress-text">
+                            Анализируем рекламные ставки...
+                        </div>
+                    </div>
+
+                    <div id="adrates-error" class="error"></div>
+
+                    <div id="adrates-results" class="results">
+                        <h3>Анализ рекламных ставок</h3>
+                        <div style="overflow-x: auto;">
+                            <table id="adrates-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                                <thead>
+                                    <tr style="background: #f5f5f5;">
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">№</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Позиция</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Тип</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Артикул</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Название</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">CPM</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Ставка</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adrates-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка анализа конкурентов -->
+                <div id="competitors-tab" class="tab-content">
+                    <div class="input-group">
+                        <label for="competitor-url">Ссылка на ваш товар:</label>
+                        <input type="url" id="competitor-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
+                        <p class="hint">Введите ссылку на ваш товар для анализа конкурентов в категории</p>
+                    </div>
+
+                    <button class="button" onclick="analyzeCompetitors()">
+                        <span id="competitors-button-text">🔬 Анализировать конкурентов</span>
+                        <span class="spinner" style="display: none;"></span>
+                    </button>
+
+                    <div id="competitors-progress" class="progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="competitors-progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="competitors-progress-text">
+                            Анализируем конкурентов...
+                        </div>
+                    </div>
+
+                    <div id="competitors-error" class="error"></div>
+
+                    <div id="competitors-results" class="results">
+                        <h3>Анализ конкурентов в категории</h3>
+                        
+                        <div id="competitors-summary" style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none;">
+                            <h4 style="margin-top: 0;">Сводка по вашему товару:</h4>
+                            <div id="summary-content"></div>
+                        </div>
+
+                        <div style="overflow-x: auto;">
+                            <table id="competitors-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                                <thead>
+                                    <tr style="background: #f5f5f5;">
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Позиция</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Название</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Цена</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Рейтинг</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Отзывы</th>
+                                        <th style="padding: 10px; text-align: left; border: 1px solid #e0e0e0;">Продавец</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="competitors-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка SEO анализа -->
+                <div id="seo-tab" class="tab-content">
+                    <div class="input-group">
+                        <label for="seo-url">Ссылка на товар:</label>
+                        <input type="url" id="seo-url" placeholder="https://www.wildberries.ru/catalog/123456/detail.aspx">
+                        <p class="hint">Введите ссылку на товар для SEO анализа</p>
+                    </div>
+
+                    <button class="button" onclick="analyzeSEO()">
+                        <span id="seo-button-text">🔍 Анализировать SEO</span>
+                        <span class="spinner" style="display: none;"></span>
+                    </button>
+
+                    <div id="seo-progress" class="progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="seo-progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="seo-progress-text">
+                            Анализируем SEO...
+                        </div>
+                    </div>
+
+                    <div id="seo-error" class="error"></div>
+
+                    <div id="seo-results" class="results">
+                        <h3>Результаты SEO анализа</h3>
+                        
+                        <div id="seo-summary" style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <h4 style="margin-top: 0;">Текущее описание:</h4>
+                            <div id="current-description" style="margin-bottom: 20px;"></div>
+                            
+                            <h4>Ключевые слова:</h4>
+                            <div id="keywords-list" style="margin-bottom: 20px;"></div>
+                            
+                            <h4>Рекомендации:</h4>
+                            <div id="seo-recommendations"></div>
+                        </div>
+
+                        <div id="optimized-description" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 20px; display: none;">
+                            <h4>Оптимизированное описание:</h4>
+                            <div id="optimized-text"></div>
+                            <button class="button secondary" style="margin-top: 15px;" onclick="copyOptimizedDescription()">
+                                📋 Копировать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка Мои рекламные кампании -->
+                <div id="tab-my-campaigns" class="tab-content">
+                    <h2>Мои рекламные кампании</h2>
+                    <button onclick="loadWbCampaigns()" style="margin-bottom: 16px;">Загрузить кампании</button>
+                    <div id="wb-campaigns-error" style="color:#c33; margin-bottom:12px; display:none;"></div>
+                    <table id="wb-campaigns-table" style="width:100%; border-collapse:collapse; display:none;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Тип</th>
+                                <th>Статус</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="wb-campaign-rates-block" style="margin-top:32px; display:none;">
+                        <h3>Ставки по кампании <span id="wb-campaign-title"></span></h3>
+                        <table id="wb-campaign-rates-table" style="width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr>
+                                    <th>Товар/Фраза</th>
+                                    <th>Ставка</th>
+                                    <th>CPM</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Вкладка Мои товары -->
+                <div id="tab-my-products" class="tab-content">
+                    <h2>Мои товары</h2>
+                    <button onclick="loadMyProducts()" style="margin-bottom: 16px;">Загрузить товары</button>
+                    <div id="my-products-error" style="color:#c33; margin-bottom:12px; display:none;"></div>
+                    <table id="my-products-table" style="width:100%; border-collapse:collapse; display:none;">
+                        <thead>
+                            <tr>
+                                <th>Фото</th>
+                                <th>Название</th>
+                                <th>Артикул</th>
+                                <th>Цена</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- Вкладка ОТЗЫВЫ -->
+                <div id="tab-reviews" class="tab-content">
+                    <h2>Отзывы</h2>
+                    <div class="input-group">
+                        <label for="reviews-stars">Фильтр по количеству звёзд:</label>
+                        <select id="reviews-stars" style="width: 200px;">
+                            <option value="">Все</option>
+                            <option value="5">5 звёзд</option>
+                            <option value="4">4 звезды</option>
+                            <option value="3">3 звезды</option>
+                            <option value="2">2 звезды</option>
+                            <option value="1">1 звезда</option>
+                        </select>
+                        <button class="button" style="margin-left: 16px;" onclick="loadReviews()">Загрузить отзывы</button>
+                    </div>
+                    <div id="reviews-error" style="color:#c33; margin-bottom:12px; display:none;"></div>
+                    <div class="results" id="reviews-results" style="display:none;">
+                        <h3>Новые отзывы</h3>
+                        <div style="overflow-x:auto;">
+                        <table id="reviews-new-table" style="width:100%; border-collapse:collapse; margin-bottom:32px; background:#fff;">
+                            <thead style="background:#f5f5f5;">
+                                <tr>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Дата</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Пользователь</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Товар</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Артикул</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Оценка</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Текст</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        </div>
+                        <h3>Отвеченные отзывы</h3>
+                        <div style="overflow-x:auto;">
+                        <table id="reviews-answered-table" style="width:100%; border-collapse:collapse; background:#fff;">
+                            <thead style="background:#f5f5f5;">
+                                <tr>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Дата</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Пользователь</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Товар</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Артикул</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Оценка</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Текст</th>
+                                    <th style="padding:8px; border:1px solid #e0e0e0;">Ответ</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <button id="profile-btn" style="position:fixed;top:24px;right:24px;z-index:1001;display:none;" class="button secondary" onclick="openProfile()">Личный кабинет</button>
+    <div id="product-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:16px; max-width:600px; margin:auto; padding:32px 24px; box-shadow:0 8px 32px rgba(0,0,0,0.15); max-height:90vh; overflow:auto;">
+            <h2 id="product-modal-title" style="text-align:center; margin-bottom:24px;"></h2>
+            <div id="product-modal-content"></div>
+            <div style="text-align:center; margin-top:16px;">
+                <button class="button" onclick="closeProductModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    <!-- Модальное окно для ответа на отзыв -->
+    <div id="review-modal">
+      <div class="modal-content">
+        <button onclick="closeReviewModal()" class="close-btn">×</button>
+        <div id="review-modal-content"></div>
+      </div>
+    </div>
+    <!-- Окно входа/регистрации -->
+    <div id="login-modal" class="modal" style="display:none;">
+      <div class="modal-content" style="max-width:350px;">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:18px;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
+          </span>
+          <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
+        </div>
+        <h2 style="text-align:center;margin-bottom:18px;">Вход</h2>
+        <input id="login-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+        <input id="login-password" type="password" placeholder="Пароль" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+        <button class="button" style="width:100%;margin-bottom:8px;" onclick="loginUser()">Войти</button>
+        <div style="text-align:center; margin-top:8px;">
+          Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрироваться</a>
+        </div>
+      </div>
+    </div>
+    <div id="register-modal" class="modal" style="display:none;">
+      <div class="modal-content" style="max-width:350px;">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:18px;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
+          </span>
+          <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
+        </div>
+        <h2 style="text-align:center;margin-bottom:18px;">Регистрация</h2>
+        <input id="register-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+        <input id="register-password" type="password" placeholder="Пароль" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
+        <button class="button" style="width:100%;margin-bottom:8px;" onclick="registerUser()">Зарегистрироваться</button>
+        <div style="text-align:center; margin-top:8px;">
+          Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a>
+        </div>
+      </div>
+    </div>
     <script>
         let currentFile = null;
         
@@ -558,12 +1175,10 @@
         const API_BASE_URL = window.location.origin;
 
         function switchTab(tab) {
-            // Переключение вкладок
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-            
             if (tab === 'parser') {
-                document.querySelector('.tab:first-child').classList.add('active');
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
                 document.getElementById('parser-tab').classList.add('active');
             } else if (tab === 'position') {
                 document.querySelector('.tab:nth-child(2)').classList.add('active');
@@ -577,6 +1192,19 @@
             } else if (tab === 'seo') {
                 document.querySelector('.tab:nth-child(5)').classList.add('active');
                 document.getElementById('seo-tab').classList.add('active');
+            } else if (tab === 'my-campaigns') {
+                document.querySelector('.tab:nth-child(6)').classList.add('active');
+                document.getElementById('tab-my-campaigns').classList.add('active');
+            } else if (tab === 'my-products') {
+                document.querySelector('.tab:nth-child(7)').classList.add('active');
+                document.getElementById('tab-my-products').classList.add('active');
+            } else if (tab === 'reviews') {
+                document.querySelector('.tab:nth-child(8)').classList.add('active');
+                document.getElementById('tab-reviews').classList.add('active');
+                // Всегда подгружаем актуальный режим генерации ответов
+                fetch('/ai-settings', { credentials: 'include' })
+                  .then(r => r.json())
+                  .then(ai => { window._aiReplyMode = ai.ai_reply_mode || 'manual'; });
             }
         }
 
@@ -948,7 +1576,7 @@
                 progressText.textContent = 'Анализ завершен!';
                 
                 setTimeout(() => {
-                    displayAdRates(data.results);
+                    displayAdRates(data.results, data.reason);
                 }, 500);
                 
             } catch (error) {
@@ -963,10 +1591,20 @@
             }
         }
 
-        function displayAdRates(results) {
+        function displayAdRates(results, reason = null) {
             const resultsDiv = document.getElementById('adrates-results');
             const tbody = document.getElementById('adrates-tbody');
             tbody.innerHTML = '';
+            // Показываем reason, если есть
+            let reasonDiv = document.getElementById('adrates-reason');
+            if (!reasonDiv) {
+                reasonDiv = document.createElement('div');
+                reasonDiv.id = 'adrates-reason';
+                reasonDiv.style = 'margin-bottom: 10px; color: #b85c00; font-size: 15px; font-weight: 500;';
+                resultsDiv.parentNode.insertBefore(reasonDiv, resultsDiv);
+            }
+            reasonDiv.style.display = reason ? 'block' : 'none';
+            reasonDiv.textContent = reason || '';
             results.forEach((item, index) => {
                 const row = document.createElement('tr');
                 const rowStyle = item.type === 'Реклама' ? 'background: #fff3cd;' : '';
@@ -1095,6 +1733,451 @@
             
             showSuccess('seo-success', 'Текст успешно скопирован!');
         }
+
+        // --- AUTH LOGIC ---
+        function showAuthModal() {
+            document.getElementById('auth-modal').style.display = 'flex';
+            showLogin();
+        }
+        function hideAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+        function showLogin() {
+            document.getElementById('auth-title').textContent = 'Вход';
+            document.getElementById('auth-form-login').style.display = 'block';
+            document.getElementById('auth-form-register').style.display = 'none';
+            document.getElementById('auth-error').style.display = 'none';
+        }
+        function showRegister() {
+            document.getElementById('auth-title').textContent = 'Регистрация';
+            document.getElementById('auth-form-login').style.display = 'none';
+            document.getElementById('auth-form-register').style.display = 'block';
+            document.getElementById('auth-error').style.display = 'none';
+        }
+        async function loginUser() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            try {
+                const resp = await fetch('/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email, password})
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || 'Ошибка входа');
+                hideAuthModal();
+                await checkAuth();
+            } catch (e) {
+                document.getElementById('auth-error').textContent = e.message;
+                document.getElementById('auth-error').style.display = 'block';
+            }
+        }
+        async function registerUser() {
+            const name = document.getElementById('register-name').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            try {
+                const resp = await fetch('/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({name, email, password})
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || 'Ошибка регистрации');
+                hideAuthModal();
+                await checkAuth();
+            } catch (e) {
+                document.getElementById('auth-error').textContent = e.message;
+                document.getElementById('auth-error').style.display = 'block';
+            }
+        }
+        async function checkAuth() {
+            try {
+                const resp = await fetch('/profile');
+                if (!resp.ok) throw new Error();
+                const data = await resp.json();
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('profile-btn').style.display = 'block';
+                hideAuthModal();
+            } catch {
+                document.getElementById('main-app').style.display = 'none';
+                document.getElementById('profile-btn').style.display = 'none';
+                showAuthModal();
+            }
+        }
+        async function logoutUser() {
+            await fetch('/logout');
+            closeProfile();
+            await checkAuth();
+        }
+        function openProfile() {
+            document.getElementById('profile-modal').style.display = 'flex';
+            loadProfileSettings();
+        }
+        function closeProfileModal() {
+            document.getElementById('profile-modal').style.display = 'none';
+        }
+        function showProfileTab(tab) {
+            document.getElementById('profile-tab-content-general').style.display = (tab==='general') ? '' : 'none';
+            document.getElementById('profile-tab-content-reviews').style.display = (tab==='reviews') ? '' : 'none';
+            document.getElementById('profile-tab-general').classList.toggle('active', tab==='general');
+            document.getElementById('profile-tab-reviews').classList.toggle('active', tab==='reviews');
+        }
+        function loadProfileSettings() {
+            fetch('/profile', { credentials: 'include' })
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('profile-name').value = data.name || '';
+                    document.getElementById('profile-wb-token').value = data.wb_token || '';
+                    document.getElementById('profile-supplier-id').value = data.supplier_id || '';
+                    fetch('/ai-settings', { credentials: 'include' })
+                        .then(r => r.json())
+                        .then(ai => {
+                            document.getElementById('profile-ai-token').value = ai.ai_token || '';
+                            document.getElementById('profile-ai-prompt').value = ai.ai_prompt || '';
+                            document.getElementById('profile-ai-reply-mode').value = ai.ai_reply_mode || 'manual';
+                        });
+                });
+        }
+        function saveProfileSettings() {
+            const name = document.getElementById('profile-name').value;
+            const wb_token = document.getElementById('profile-wb-token').value;
+            const supplier_id = document.getElementById('profile-supplier-id').value;
+            const ai_token = document.getElementById('profile-ai-token').value;
+            const ai_prompt = document.getElementById('profile-ai-prompt').value;
+            const ai_reply_mode = document.getElementById('profile-ai-reply-mode').value;
+            fetch('/profile', {
+                method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, wb_token, supplier_id })
+            }).then(() => {
+                fetch('/ai-settings', {
+                    method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ai_token, ai_prompt, ai_reply_mode })
+                }).then(() => {
+                    const status = document.getElementById('profile-save-status');
+                    status.style.display = 'block';
+                    setTimeout(()=>{ status.style.display = 'none'; }, 1500);
+                });
+            });
+        }
+        // Проверяем авторизацию при загрузке страницы
+        window.addEventListener('DOMContentLoaded', checkAuth);
+
+        function loadWbCampaigns() {
+            const errorDiv = document.getElementById('wb-campaigns-error');
+            const table = document.getElementById('wb-campaigns-table');
+            const tbody = table.querySelector('tbody');
+            errorDiv.style.display = 'none';
+            table.style.display = 'none';
+            tbody.innerHTML = '';
+            fetch('/wb-campaigns', { credentials: 'include' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        errorDiv.textContent = data.error;
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    // Универсальная обработка формата ответа
+                    let campaigns = data.adverts || data.data || data;
+                    if (!Array.isArray(campaigns)) {
+                        campaigns = Object.values(campaigns).find(v => Array.isArray(v)) || [];
+                    }
+                    if (!campaigns.length) {
+                        errorDiv.textContent = 'Нет рекламных кампаний или неверный токен/права.';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    campaigns.forEach(camp => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td>${camp.id}</td><td>${camp.name}</td><td>${camp.type}</td><td>${camp.status}</td><td><button onclick="showCampaignRates(${camp.id}, '${camp.type}', '${camp.name ? camp.name.replace(/'/g, '') : ''}')">Показать ставки</button></td>`;
+                        tbody.appendChild(tr);
+                    });
+                    table.style.display = 'table';
+                })
+                .catch(e => {
+                    errorDiv.textContent = 'Ошибка при загрузке кампаний: ' + e;
+                    errorDiv.style.display = 'block';
+                });
+        }
+        function showCampaignRates(id, type, name) {
+            const block = document.getElementById('wb-campaign-rates-block');
+            const title = document.getElementById('wb-campaign-title');
+            const table = document.getElementById('wb-campaign-rates-table');
+            const tbody = table.querySelector('tbody');
+            block.style.display = 'block';
+            title.textContent = `${name} (ID: ${id})`;
+            tbody.innerHTML = '<tr><td colspan="3">Загрузка...</td></tr>';
+            fetch('/wb-campaign-rates', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ campaign_id: id, campaign_type: type })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    tbody.innerHTML = '';
+                    if (data.error) {
+                        tbody.innerHTML = `<tr><td colspan="3" style="color:#c33;">${data.error}</td></tr>`;
+                        return;
+                    }
+                    let rates = data.rates || data.data || data;
+                    if (!Array.isArray(rates)) {
+                        rates = Object.values(rates);
+                    }
+                    if (!rates.length) {
+                        tbody.innerHTML = '<tr><td colspan="3">Нет ставок</td></tr>';
+                        return;
+                    }
+                    rates.forEach(rate => {
+                        tbody.innerHTML += `<tr><td>${rate.phrase || rate.subjectName || rate.nm || rate.nmId || '-'}</td><td>${rate.bid || rate.rate || '-'}</td><td>${rate.cpm || '-'}</td></tr>`;
+                    });
+                })
+                .catch(e => {
+                    tbody.innerHTML = `<tr><td colspan="3" style="color:#c33;">Ошибка: ${e}</td></tr>`;
+                });
+        }
+        function loadMyProducts() {
+            const errorDiv = document.getElementById('my-products-error');
+            const table = document.getElementById('my-products-table');
+            const tbody = table.querySelector('tbody');
+            errorDiv.style.display = 'none';
+            table.style.display = 'none';
+            tbody.innerHTML = '';
+            fetch('/wb-my-products', { credentials: 'include' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        errorDiv.textContent = data.error;
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    let products = data.products || data.data || data;
+                    if (!Array.isArray(products)) {
+                        products = Object.values(products).find(v => Array.isArray(v)) || [];
+                    }
+                    if (!products.length) {
+                        errorDiv.textContent = 'Нет товаров или неверный токен/права.';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    products.forEach(prod => {
+                        const tr = document.createElement('tr');
+                        const img = prod.photo || (prod.mediaFiles && prod.mediaFiles[0]) || '';
+                        tr.innerHTML = `<td><img src="${img}" alt="" style="max-width:60px;max-height:60px;"></td><td><a href="#" onclick="showProductModal('${prod.nmId || prod.id || prod.sku}', this)">${prod.name || prod.title || '-'}</a></td><td>${prod.nmId || prod.id || prod.sku || '-'}</td><td>${prod.priceU ? (prod.priceU/100).toFixed(2) : (prod.price || '-')}</td>`;
+                        tbody.appendChild(tr);
+                    });
+                    table.style.display = 'table';
+                })
+                .catch(e => {
+                    errorDiv.textContent = 'Ошибка при загрузке товаров: ' + e;
+                    errorDiv.style.display = 'block';
+                });
+        }
+        function showProductModal(nmId, el) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('product-modal-title');
+            const content = document.getElementById('product-modal-content');
+            title.textContent = 'Загрузка...';
+            content.innerHTML = '';
+            modal.style.display = 'flex';
+            fetch(`/wb-product-info?nm_id=${nmId}`, { credentials: 'include' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        title.textContent = 'Ошибка';
+                        content.innerHTML = `<div style="color:#c33;">${data.error}</div>`;
+                        return;
+                    }
+                    const prod = data.product || data.data || data;
+                    title.textContent = prod.name || prod.title || prod.nmId || prod.id || 'Товар';
+                    let html = '';
+                    if (prod.photo || (prod.mediaFiles && prod.mediaFiles[0])) {
+                        html += `<img src="${prod.photo || prod.mediaFiles[0]}" alt="" style="max-width:200px;max-height:200px;display:block;margin:auto;">`;
+                    }
+                    html += '<ul style="margin-top:16px;">';
+                    for (const [k, v] of Object.entries(prod)) {
+                        if (typeof v === 'object' && v !== null) continue;
+                        html += `<li><b>${k}:</b> ${v}</li>`;
+                    }
+                    html += '</ul>';
+                    content.innerHTML = html;
+                })
+                .catch(e => {
+                    title.textContent = 'Ошибка';
+                    content.innerHTML = `<div style="color:#c33;">Ошибка: ${e}</div>`;
+                });
+        }
+        function closeProductModal() {
+            document.getElementById('product-modal').style.display = 'none';
+        }
+        async function loadReviews() {
+            const stars = document.getElementById('reviews-stars').value;
+            const errorDiv = document.getElementById('reviews-error');
+            const resultsDiv = document.getElementById('reviews-results');
+            const newTbody = document.querySelector('#reviews-new-table tbody');
+            const answeredTbody = document.querySelector('#reviews-answered-table tbody');
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+            newTbody.innerHTML = '';
+            answeredTbody.innerHTML = '';
+            try {
+                const resp = await fetch(`/wb-reviews?stars=${stars}`, { credentials: 'include' });
+                const data = await resp.json();
+                if (data.error) throw new Error(data.error);
+                // Новые отзывы
+                (data.new || []).forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.dataset.review = JSON.stringify(r);
+                    tr.innerHTML = `<td style='padding:8px; border:1px solid #e0e0e0;' data-label='Дата'>${r.date||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Пользователь'>${r.user||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Товар'>${r.product||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Артикул'>${r.article||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Оценка'>${r.stars||''}</td><td class='review-text-cell' style='padding:8px; border:1px solid #e0e0e0; white-space:pre-line;' data-label='Текст'>${r.text||''}</td>`;
+                    newTbody.appendChild(tr);
+                });
+                // Отвеченные отзывы
+                (data.answered || []).forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.dataset.review = JSON.stringify(r);
+                    tr.innerHTML = `<td style='padding:8px; border:1px solid #e0e0e0;' data-label='Дата'>${r.date||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Пользователь'>${r.user||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Товар'>${r.product||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Артикул'>${r.article||''}</td><td style='padding:8px; border:1px solid #e0e0e0;' data-label='Оценка'>${r.stars||''}</td><td class='review-text-cell' style='padding:8px; border:1px solid #e0e0e0; white-space:pre-line;' data-label='Текст'>${r.text||''}</td><td style='padding:8px; border:1px solid #e0e0e0; white-space:pre-line;' data-label='Ответ'>${r.answer||''}</td>`;
+                    answeredTbody.appendChild(tr);
+                });
+                resultsDiv.style.display = 'block';
+            } catch (e) {
+                errorDiv.textContent = 'Ошибка: ' + e.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+        function closeReviewModal() {
+          document.getElementById('review-modal').style.display = 'none';
+          document.getElementById('review-modal-content').innerHTML = '';
+        }
+        function openReviewModal(review, isAnswered) {
+          const modal = document.getElementById('review-modal');
+          const content = document.getElementById('review-modal-content');
+          window._currentReviewCreatedDate = review.createdDate || review.date || '';
+          // Получаем режим из профиля (асинхронно, но для UX кэшируем)
+          let aiReplyMode = window._aiReplyMode || 'manual';
+          fetch('/ai-settings', { credentials: 'include' })
+            .then(r => r.json())
+            .then(ai => { window._aiReplyMode = ai.ai_reply_mode || 'manual'; });
+          if (!isAnswered) {
+            let genBtn = '';
+            if (window._aiReplyMode === 'suggest' || window._aiReplyMode === 'auto') {
+              genBtn = `<button id='gen-ai-reply-btn' class='modal-btn' style='background:#e0e0e0;color:#4f5bd5;margin-bottom:8px;'>Сгенерировать ответ</button>`;
+            }
+            content.innerHTML = `
+              <h3><span>📝</span> Ответ на отзыв</h3>
+              <div class='review-info'><span class='review-label'>Товар:</span> ${review.product || ''}</div>
+              <div class='review-info'><span class='review-label'>Пользователь:</span> ${review.user || ''}</div>
+              <div class='review-info'><span class='review-label'>Текст:</span><br><span style='white-space:pre-line;'>${review.text || ''}</span></div>
+              <textarea id='review-reply-text' placeholder='Ваш ответ...'></textarea>
+              ${genBtn}
+              <button onclick='sendReviewReply(${JSON.stringify(review)})' class='modal-btn'>Отправить</button>
+              <div id='review-reply-status' class='modal-status'></div>
+            `;
+            if (genBtn) {
+              setTimeout(()=>{
+                document.getElementById('gen-ai-reply-btn').onclick = function() {
+                  const statusDiv = document.getElementById('review-reply-status');
+                  statusDiv.textContent = 'Генерация...';
+                  fetch('/generate-review-reply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                      review_text: review.text,
+                      product_name: review.product,
+                      stars: review.stars
+                    })
+                  })
+                    .then(r => r.json())
+                    .then(data => {
+                      if (data.reply) {
+                        document.getElementById('review-reply-text').value = data.reply;
+                        statusDiv.textContent = 'Ответ сгенерирован!';
+                        statusDiv.style.color = '#4caf50';
+                      } else {
+                        statusDiv.textContent = data.error || 'Ошибка генерации.';
+                        statusDiv.style.color = '#c33';
+                      }
+                    })
+                    .catch(e => {
+                      statusDiv.textContent = 'Ошибка: ' + e;
+                      statusDiv.style.color = '#c33';
+                    });
+                };
+              }, 100);
+            }
+          } else {
+            content.innerHTML = `
+              <h3><span>👁️</span> Просмотр отзыва</h3>
+              <div class='review-info'><span class='review-label'>Товар:</span> ${review.product || ''}</div>
+              <div class='review-info'><span class='review-label'>Пользователь:</span> ${review.user || ''}</div>
+              <div class='review-info'><span class='review-label'>Текст:</span><br><span style='white-space:pre-line;'>${review.text || ''}</span></div>
+              <div class='modal-answer'><span class='review-label'>Ответ:</span><br><span style='white-space:pre-line;'>${review.answer || ''}</span></div>
+            `;
+          }
+          modal.style.display = 'flex';
+        }
+        function sendReviewReply(review) {
+          const text = document.getElementById('review-reply-text').value.trim();
+          const statusDiv = document.getElementById('review-reply-status');
+          if (!text) {
+            statusDiv.textContent = 'Введите текст ответа!';
+            return;
+          }
+          statusDiv.textContent = 'Отправка...';
+          fetch('/wb-reply-review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: review.id, text })
+          })
+            .then(r => r.json())
+            .then(data => {
+              if (data.success) {
+                statusDiv.style.color = '#4caf50';
+                statusDiv.textContent = 'Ответ отправлен!';
+                setTimeout(() => { closeReviewModal(); loadReviews(); }, 1200);
+              } else {
+                statusDiv.style.color = '#c33';
+                statusDiv.textContent = data.error || 'Ошибка при отправке.';
+              }
+            })
+            .catch(e => {
+              statusDiv.style.color = '#c33';
+              statusDiv.textContent = 'Ошибка: ' + e;
+            });
+        }
+        // --- Добавляем обработчики клика по строкам отзывов ---
+        document.addEventListener('DOMContentLoaded', function() {
+          function addReviewRowHandlers() {
+            // Делегирование событий для tbody новых отзывов
+            const newTbody = document.querySelector('#reviews-new-table tbody');
+            newTbody.onclick = function(e) {
+              let cell = e.target.closest('.review-text-cell');
+              if (!cell) return;
+              let tr = cell.closest('tr');
+              if (!tr) return;
+              const review = JSON.parse(tr.dataset.review);
+              openReviewModal(review, false);
+            };
+            // Делегирование событий для tbody отвеченных отзывов
+            const answeredTbody = document.querySelector('#reviews-answered-table tbody');
+            answeredTbody.onclick = function(e) {
+              let cell = e.target.closest('.review-text-cell');
+              if (!cell) return;
+              let tr = cell.closest('tr');
+              if (!tr) return;
+              const review = JSON.parse(tr.dataset.review);
+              openReviewModal(review, true);
+            };
+          }
+          // После загрузки отзывов пересоздаём обработчики
+          const origLoadReviews = window.loadReviews;
+          window.loadReviews = function() {
+            origLoadReviews();
+            // addReviewRowHandlers вызывается теперь внутри loadReviews
+          };
+          addReviewRowHandlers();
+        });
     </script>
 </body>
 </html>

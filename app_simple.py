@@ -1673,18 +1673,18 @@ def auto_reply_to_reviews():
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8000))
-    app.run(host='0.0.0.0', port=port)
-
-with app.app_context():
-    db.create_all()
-    if not hasattr(User, 'ai_token'):
-        with db.engine.connect() as con:
-            con.execute('ALTER TABLE user ADD COLUMN ai_token VARCHAR(256)')
-    if not hasattr(User, 'ai_prompt'):
-        with db.engine.connect() as con:
-            con.execute('ALTER TABLE user ADD COLUMN ai_prompt TEXT')
-    if not hasattr(User, 'ai_reply_mode'):
-        with db.engine.connect() as con:
-            con.execute("ALTER TABLE user ADD COLUMN ai_reply_mode VARCHAR(16) DEFAULT 'manual'")
+    print(f"Flask is starting on port {port}")
+    with app.app_context():
+        db.create_all()
+        if not hasattr(User, 'ai_token'):
+            with db.engine.connect() as con:
+                con.execute('ALTER TABLE user ADD COLUMN ai_token VARCHAR(256)')
+        if not hasattr(User, 'ai_prompt'):
+            with db.engine.connect() as con:
+                con.execute('ALTER TABLE user ADD COLUMN ai_prompt TEXT')
+        if not hasattr(User, 'ai_reply_mode'):
+            with db.engine.connect() as con:
+                con.execute("ALTER TABLE user ADD COLUMN ai_reply_mode VARCHAR(16) DEFAULT 'manual'")
+    app.run(host='0.0.0.0', port=port, debug=True)
 
 exit()
