@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6c4ec6 0%, #a084ee 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,9 +22,9 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.97);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(160, 132, 238, 0.10);
             width: 100%;
             max-width: 800px;
             overflow: hidden;
@@ -32,11 +32,11 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6c4ec6 0%, #a084ee 100%);
             color: white;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 8px rgba(108,78,198,0.10);
         }
 
         .header h1 {
@@ -52,7 +52,7 @@
 
         .tabs {
             display: flex;
-            background: #f5f5f5;
+            background: #f5f5fa;
             border-bottom: 2px solid #e0e0e0;
         }
 
@@ -63,18 +63,18 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-            color: #666;
+            color: #7e8ce3;
             position: relative;
             font-size: 14px;
         }
 
         .tab:hover {
-            background: #ebebeb;
+            background: #f5eaff;
         }
 
         .tab.active {
             background: white;
-            color: #667eea;
+            color: #6c4ec6;
         }
 
         .tab.active::after {
@@ -84,7 +84,7 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: #667eea;
+            background: #6c4ec6;
         }
 
         .content {
@@ -128,11 +128,11 @@
         select {
             width: 100%;
             padding: 15px;
-            border: 2px solid #b300ff;
+            border: 2px solid #6c4ec6;
             border-radius: 8px;
             font-size: 1rem;
-            box-shadow: 0 0 8px #b300ff44;
-            color: #00eaff;
+            box-shadow: 0 0 8px #6c4ec644;
+            color: #111;
             transition: all 0.3s ease;
             font-family: inherit;
         }
@@ -146,12 +146,12 @@
         .input-group textarea:focus,
         select:focus {
             outline: none;
-            border-color: #00eaff;
-            box-shadow: 0 0 16px #00eaff;
+            border-color: #a084ee;
+            box-shadow: 0 0 16px #a084ee;
         }
 
         .button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #a084ee 0%, #6c4ec6 100%);
             color: white;
             border: none;
             padding: 15px 40px;
@@ -163,12 +163,11 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(108, 78, 198, 0.18);
         }
 
         .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(108, 78, 198, 0.25);
         }
 
         .button:active {
@@ -182,12 +181,12 @@
         }
 
         .button.secondary {
-            background: #4CAF50;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            background: #7e8ce3;
+            box-shadow: 0 4px 15px rgba(108, 78, 198, 0.13);
         }
 
         .button.secondary:hover {
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 6px 20px rgba(108, 78, 198, 0.18);
         }
 
         .progress {
@@ -213,7 +212,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6c4ec6 0%, #a084ee 100%);
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -257,7 +256,7 @@
         }
 
         .result-item strong {
-            color: #667eea;
+            color: #6c4ec6;
         }
 
         .hint {
@@ -352,7 +351,7 @@
           box-shadow: 0 4px 32px rgba(102,126,234,0.08);
         }
         #reviews-results thead tr {
-          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(90deg, #a084ee 0%, #f5aaff 100%);
         }
         #reviews-results th {
           color: #fff;
@@ -385,12 +384,12 @@
         }
         #reviews-results td.review-text-cell {
           cursor: pointer;
-          color: #4f5bd5;
+          color: #a084ee;
           text-decoration: underline;
           transition: color 0.2s;
         }
         #reviews-results td.review-text-cell:hover {
-          color: #2d3a8c;
+          color: #7e8ce3;
         }
         /* Модальное окно отзывов */
         #review-modal {
@@ -665,6 +664,15 @@
         @media (max-width: 600px) {
           .neon-title { font-size: 1.5rem; }
           .neon-title-trail { height: 1em; }
+        }
+        #profile-btn.button.secondary {
+            background: #217a3a !important;
+            color: #fff !important;
+            box-shadow: 0 4px 15px rgba(33, 122, 58, 0.18) !important;
+        }
+        #profile-btn.button.secondary:hover {
+            background: #1a5e2c !important;
+            box-shadow: 0 6px 20px rgba(33, 122, 58, 0.25) !important;
         }
     </style>
 </head>
