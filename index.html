@@ -671,19 +671,11 @@
 <body>
     <div id="auth-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:1000; align-items:center; justify-content:center;">
         <div style="background:white; border-radius:16px; max-width:400px; margin:auto; padding:32px 24px; box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-            <h2 id="auth-title" style="text-align:center; margin-bottom:24px;">Вход</h2>
             <div id="auth-error" style="color:#c33; margin-bottom:12px; display:none;"></div>
             <form id="auth-form-login" onsubmit="return false;">
-                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 1.5rem; font-weight: 700; color: #222; letter-spacing: 0.08em; text-align: center; margin-bottom: 1em;">EraserHead</div>
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:18px;">
-                    <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
-                        <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
-                    </span>
-                    <span class="neon-title-wrap">
-                        <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
-                        <svg class="neon-title-trail" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trail2" x1="0" y1="20" x2="400" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity="0.5"/><stop offset="0.2" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="0.5" stop-color="#764ba2" stop-opacity="0.2"/><stop offset="0.8" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="1" stop-color="#fff" stop-opacity="0.5"/></linearGradient></defs><ellipse cx="200" cy="20" rx="180" ry="13" fill="url(#trail2)"/><ellipse cx="200" cy="20" rx="120" ry="7" fill="#fff" fill-opacity="0.10"/></svg>
-                    </span>
-                </div>
+                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 2rem; font-weight: 700; color: #a259e6; letter-spacing: 0.08em; text-align: center; margin-bottom: 0.5em;">MarketUniverse</div>
+                <h2 style="text-align:center; margin-bottom:24px;">Вход</h2>
+                <div id="auth-error" style="color:#c33; margin-bottom:12px; display:none;"></div>
                 <input id="login-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
                 <input id="login-password" type="password" placeholder="Пароль" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
                 <button class="button" style="width:100%;margin-bottom:8px;" onclick="loginUser()">Войти</button>
@@ -692,16 +684,8 @@
                 </div>
             </form>
             <form id="auth-form-register" style="display:none;" onsubmit="return false;">
-                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 1.5rem; font-weight: 700; color: #222; letter-spacing: 0.08em; text-align: center; margin-bottom: 1em;">EraserHead</div>
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:18px;">
-                    <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
-                        <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
-                    </span>
-                    <span class="neon-title-wrap">
-                        <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
-                        <svg class="neon-title-trail" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trail3" x1="0" y1="20" x2="400" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity="0.5"/><stop offset="0.2" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="0.5" stop-color="#764ba2" stop-opacity="0.2"/><stop offset="0.8" stop-color="#b39ddb" stop-opacity="0.3"/><stop offset="1" stop-color="#fff" stop-opacity="0.5"/></linearGradient></defs><ellipse cx="200" cy="20" rx="180" ry="13" fill="url(#trail3)"/><ellipse cx="200" cy="20" rx="120" ry="7" fill="#fff" fill-opacity="0.10"/></svg>
-                    </span>
-                </div>
+                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 2rem; font-weight: 700; color: #a259e6; letter-spacing: 0.08em; text-align: center; margin-bottom: 0.5em;">MarketUniverse</div>
+                <h2 style="text-align:center; margin-bottom:24px;">Регистрация</h2>
                 <input id="register-name" type="text" placeholder="Имя" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
                 <input id="register-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
                 <input id="register-password" type="password" placeholder="Пароль" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
@@ -755,7 +739,7 @@
         <div class="container">
             <!-- Шапка -->
             <div class="header">
-                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 2rem; font-weight: 700; color: #222; letter-spacing: 0.08em; text-align: center; margin-bottom: 0.5em;">EraserHead</div>
+                <div style="font-family: 'Montserrat', Arial, sans-serif; font-size: 2rem; font-weight: 700; color: #fff; letter-spacing: 0.08em; text-align: center; margin-bottom: 0.5em;">MarketUniverse</div>
             </div>
 
             <div class="tabs">
@@ -1140,7 +1124,7 @@
           <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
             <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
           </span>
-          <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
+          <span class="neon-title" style="font-size:1.7rem; color: #fff;">MarketUniverse</span>
         </div>
         <h2 style="text-align:center;margin-bottom:18px;">Вход</h2>
         <input id="login-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
@@ -1157,7 +1141,7 @@
           <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;box-shadow:0 2px 12px rgba(102,126,234,0.16);margin-bottom:8px;">
             <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><g><ellipse cx="16" cy="24" rx="6" ry="2.5" fill="#e0e7ff"/><path d="M16 4c2.5 2.5 7 10 4 18-1.5 4-6.5 4-8 0-3-8 1.5-15.5 4-18Z" fill="#fff" stroke="#4f5bd5" stroke-width="2.2"/><circle cx="16" cy="13" r="2.2" fill="#667eea"/><path d="M16 22v4" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/></g></svg>
           </span>
-          <span class="neon-title" style="font-size:1.7rem;">EraserHead</span>
+          <span class="neon-title" style="font-size:1.7rem; color: #fff;">MarketUniverse</span>
         </div>
         <h2 style="text-align:center;margin-bottom:18px;">Регистрация</h2>
         <input id="register-email" type="email" placeholder="Email" style="width:100%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #e0e0e0;">
@@ -1743,13 +1727,11 @@
             document.getElementById('auth-modal').style.display = 'none';
         }
         function showLogin() {
-            document.getElementById('auth-title').textContent = 'Вход';
             document.getElementById('auth-form-login').style.display = 'block';
             document.getElementById('auth-form-register').style.display = 'none';
             document.getElementById('auth-error').style.display = 'none';
         }
         function showRegister() {
-            document.getElementById('auth-title').textContent = 'Регистрация';
             document.getElementById('auth-form-login').style.display = 'none';
             document.getElementById('auth-form-register').style.display = 'block';
             document.getElementById('auth-error').style.display = 'none';
