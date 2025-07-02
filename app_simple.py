@@ -1671,8 +1671,20 @@ def auto_reply_to_reviews():
             # Для каждого нового отзыва вызвать generate_review_reply и отправить ответ через WB API
             pass  # (реализация зависит от вашей логики запуска фоновых задач)
 
+with app.app_context():
+    db.create_all()
+    if not hasattr(User, 'ai_token'):
+        with db.engine.connect() as con:
+            con.execute('ALTER TABLE user ADD COLUMN ai_token VARCHAR(256)')
+    if not hasattr(User, 'ai_prompt'):
+        with db.engine.connect() as con:
+            con.execute('ALTER TABLE user ADD COLUMN ai_prompt TEXT')
+    if not hasattr(User, 'ai_reply_mode'):
+        with db.engine.connect() as con:
+            con.execute("ALTER TABLE user ADD COLUMN ai_reply_mode VARCHAR(16) DEFAULT 'manual'")
+
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))
+    port = int(os.getenv('PORT', 8000))
     print(f"Flask is starting on port {port}")
     app.run(host='0.0.0.0', port=port)
 
