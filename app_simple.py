@@ -1687,5 +1687,3 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', 8000))
     print(f"Flask is starting on port {port}")
     app.run(host='0.0.0.0', port=port)
-
-exit()
