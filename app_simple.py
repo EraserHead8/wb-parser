@@ -1685,6 +1685,6 @@ if __name__ == '__main__':
         if not hasattr(User, 'ai_reply_mode'):
             with db.engine.connect() as con:
                 con.execute("ALTER TABLE user ADD COLUMN ai_reply_mode VARCHAR(16) DEFAULT 'manual'")
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)
 
 exit()
